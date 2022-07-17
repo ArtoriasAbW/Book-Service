@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 
-	"gitlab.ozon.dev/kshmatov/masterclass1/internal/commander"
-	"gitlab.ozon.dev/kshmatov/masterclass1/internal/handlers"
+	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/commander"
+	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/handlers"
 )
 
 func main() {
