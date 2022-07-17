@@ -3,7 +3,6 @@ package handlers
 import (
 	"fmt"
 	"log"
-	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -18,6 +17,7 @@ const (
 	addCmd    = "add"
 	removeCmd = "remove"
 	editCmd   = "edit"
+	readCmd   = "read"
 )
 
 var BadArgument = errors.New("bad argument")
@@ -61,19 +61,28 @@ func addFunc(data string) string {
 
 func removeFunc(data string) string {
 	log.Printf("delete command param: %s", data)
-	params := strings.Split(data, " ")
-	if len(params) != 1 {
-		return errors.Wrapf(BadArgument, "%d items: <%v>", len(params), params).Error()
-	}
-	id, err := strconv.ParseUint(params[0], 10, 64)
+	id, err := parseId(data)
 	if err != nil {
-		return errors.Wrapf(BadArgument, "Invalid id: %s", params[0]).Error()
+		return err.Error()
 	}
-	err = storage.Remove(uint(id))
+	err = storage.Remove(id)
 	if err != nil {
 		return err.Error()
 	}
 	return fmt.Sprintf("book with id %d was removed", id)
+}
+
+func readFunc(data string) string {
+	log.Printf("read command param: %s", data)
+	id, err := parseId(data)
+	if err != nil {
+		return err.Error()
+	}
+	err = storage.MarkRead(id)
+	if err != nil {
+		return err.Error()
+	}
+	return fmt.Sprintf("book with id %d was mark as read", id)
 }
 
 func AddHandlers(c *commander.Commander) {
@@ -81,4 +90,5 @@ func AddHandlers(c *commander.Commander) {
 	c.RegisterHandler(listCmd, listFunc)
 	c.RegisterHandler(addCmd, addFunc)
 	c.RegisterHandler(removeCmd, removeFunc)
+	c.RegisterHandler(readCmd, readFunc)
 }

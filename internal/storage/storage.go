@@ -52,3 +52,11 @@ func Remove(id uint) error {
 	}
 	return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
 }
+
+func MarkRead(id uint) error {
+	if _, ok := data[id]; ok {
+		data[id].unread = false
+		return nil
+	}
+	return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
+}
