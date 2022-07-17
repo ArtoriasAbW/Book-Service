@@ -3,6 +3,7 @@ package handlers
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -12,15 +13,20 @@ import (
 )
 
 const (
-	helpCmd = "help"
-	listCmd = "list"
-	addCmd  = "add"
+	helpCmd   = "help"
+	listCmd   = "list"
+	addCmd    = "add"
+	removeCmd = "remove"
+	editCmd   = "edit"
 )
 
 var BadArgument = errors.New("bad argument")
 
 func listFunc(s string) string {
 	data := storage.List()
+	if len(data) == 0 {
+		return "book list is empty"
+	}
 	res := make([]string, 0, len(data))
 	for _, v := range data {
 		res = append(res, v.String())
@@ -31,28 +37,48 @@ func listFunc(s string) string {
 func helpFunc(s string) string {
 	return "/help - list commands\n" +
 		"/list - list data\n" +
-		"/add <name> <password> - add new user with name and password"
+		"/add <title> <author> - add new book with title and author\n" +
+		"/read <id> - mark book with this id as readed\n" +
+		"/remove <id> - remove book with this id"
 }
 
 func addFunc(data string) string {
-	log.Printf("add command param: <data>")
-	params := strings.Split(data, " ")
+	log.Printf("add command param: %s", data)
+	params := strings.Split(data, "|")
 	if len(params) != 2 {
 		return errors.Wrapf(BadArgument, "%d items: <%v>", len(params), params).Error()
 	}
-	u, err := storage.NewUser(params[0], params[1])
+	book, err := storage.NewBook(params[0], params[1], true)
 	if err != nil {
 		return err.Error()
 	}
-	err = storage.Add(u)
+	err = storage.Add(book)
 	if err != nil {
 		return err.Error()
 	}
-	return fmt.Sprintf("user %v added", u)
+	return fmt.Sprintf("book %v added", book)
+}
+
+func removeFunc(data string) string {
+	log.Printf("delete command param: %s", data)
+	params := strings.Split(data, " ")
+	if len(params) != 1 {
+		return errors.Wrapf(BadArgument, "%d items: <%v>", len(params), params).Error()
+	}
+	id, err := strconv.ParseUint(params[0], 10, 64)
+	if err != nil {
+		return errors.Wrapf(BadArgument, "Invalid id: %s", params[0]).Error()
+	}
+	err = storage.Remove(uint(id))
+	if err != nil {
+		return err.Error()
+	}
+	return fmt.Sprintf("book with id %d was removed", id)
 }
 
 func AddHandlers(c *commander.Commander) {
 	c.RegisterHandler(helpCmd, helpFunc)
 	c.RegisterHandler(listCmd, listFunc)
 	c.RegisterHandler(addCmd, addFunc)
+	c.RegisterHandler(removeCmd, removeFunc)
 }

@@ -7,48 +7,48 @@ import (
 	"github.com/pkg/errors"
 )
 
-var data map[uint]*User
+var data map[uint]*Book
 
-var UserNotExists = errors.New("user dows not exist")
-var UserExists = errors.New("user exists")
+var BookNotExists = errors.New("book doesn't exist")
+var BookExists = errors.New("book already exists")
 
 func init() {
 	log.Println("init storage")
-	data = make(map[uint]*User)
-	u, _ := NewUser("Kirill", "123456")
-	if err := Add(u); err != nil {
+	data = make(map[uint]*Book)
+	book, _ := NewBook("История западной философии", "Бертран Рассел", true)
+	if err := Add(book); err != nil {
 		log.Panic(err)
 	}
 }
 
-func List() []*User {
-	res := make([]*User, 0, len(data))
+func List() []*Book {
+	res := make([]*Book, 0, len(data))
 	for _, v := range data {
 		res = append(res, v)
 	}
 	return res
 }
 
-func Add(u *User) error {
+func Add(u *Book) error {
 	if _, ok := data[u.GetId()]; ok {
-		return errors.Wrap(UserExists, strconv.FormatUint(uint64(u.GetId()), 10))
+		return errors.Wrap(BookExists, strconv.FormatUint(uint64(u.GetId()), 10))
 	}
 	data[u.GetId()] = u
 	return nil
 }
 
-func Update(u *User) error {
+func Update(u *Book) error {
 	if _, ok := data[u.GetId()]; !ok {
-		return errors.Wrap(UserNotExists, strconv.FormatUint(uint64(u.GetId()), 10))
+		return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(u.GetId()), 10))
 	}
 	data[u.GetId()] = u
 	return nil
 }
 
-func Delete(id uint) error {
+func Remove(id uint) error {
 	if _, ok := data[id]; ok {
 		delete(data, id)
 		return nil
 	}
-	return errors.Wrap(UserNotExists, strconv.FormatUint(uint64(id), 10))
+	return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
 }

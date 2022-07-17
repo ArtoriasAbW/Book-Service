@@ -6,53 +6,62 @@ import (
 
 var lastId = uint(0)
 
-type User struct {
-	id       uint
-	name     string
-	password string
+type Book struct {
+	id     uint
+	title  string
+	author string
+	unread bool
 }
 
-func NewUser(name, passwprd string) (*User, error) {
-	u := User{}
-	if err := u.SetName(name); err != nil {
+func NewBook(title, author string, isReaded bool) (*Book, error) {
+	book := Book{}
+	if err := book.SetAuthor(author); err != nil {
 		return nil, err
 	}
-	if err := u.SetPassword(passwprd); err != nil {
+	if err := book.SetTitle(title); err != nil {
+		return nil, err
+	}
+	if err := book.SetStatus(isReaded); err != nil {
 		return nil, err
 	}
 	lastId++
-	u.id = lastId
-	return &u, nil
+	book.id = lastId
+	return &book, nil
 }
 
-func (u *User) SetName(name string) error {
-	if len(name) == 0 || len(name) > 10 {
-		return fmt.Errorf("bad name <%v>", name)
-	}
-	u.name = name
+func (b *Book) SetTitle(title string) error {
+	b.title = title
 	return nil
 }
 
-func (u *User) SetPassword(pwd string) error {
-	if len(pwd) < 6 || len(pwd) > 10 {
-		return fmt.Errorf("bad password <%v>", pwd)
-	}
-	u.password = pwd
+func (b *Book) SetAuthor(author string) error {
+	b.author = author
 	return nil
 }
 
-func (u User) String() string {
-	return fmt.Sprintf("%d: %s / %s", u.id, u.name, u.password)
+func (b *Book) SetStatus(isReaded bool) error {
+	b.unread = isReaded
+	return nil
 }
 
-func (u User) GetName() string {
-	return u.name
+func (b Book) String() string {
+	var state string
+	if b.unread {
+		state = "unread"
+	} else {
+		state = "read"
+	}
+	return fmt.Sprintf("%d: %s | %s | %s", b.id, b.title, b.author, state)
 }
 
-func (u User) GetPassword() string {
-	return u.password
+func (b Book) GetTitle() string {
+	return b.title
 }
 
-func (u User) GetId() uint {
-	return u.id
+func (b Book) GetAuthor() string {
+	return b.title
+}
+
+func (b Book) GetId() uint {
+	return b.id
 }

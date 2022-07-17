@@ -8,13 +8,12 @@ import (
 )
 
 func main() {
-	log.Println("start main")
+	log.Println("bot starts")
 	cmd, err := commander.Init()
 	if err != nil {
 		log.Panic(err)
 	}
 	handlers.AddHandlers(cmd)
-
 	if err := cmd.Run(); err != nil {
 		log.Panic(err)
 	}
