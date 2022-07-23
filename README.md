@@ -9,9 +9,9 @@
 
 ## Command list
 
-- /help - list commands.
-- /list - list books.
-- /add "title"|"author" - add new book with title and author.
-- /remove "id" - remove book with this id.
-- /edit "id"|"title"|"author"|"status" - edit book with this id.
-- /read "id" - mark book with this id as readed.
+- **/help** - list commands.
+- **/list** - list books.
+- **/add "title"|"author"** - add new book with title and author.
+- **/remove "id"** - remove book with this id.
+- **/edit "id"|"title"|"author"|"status"** - edit book with this id.
+- **/read "id"** - mark book with this id as readed.
