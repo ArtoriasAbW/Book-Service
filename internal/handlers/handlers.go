@@ -36,7 +36,7 @@ func listFunc(s string) string {
 
 func helpFunc(s string) string {
 	return "/help - list commands\n" +
-		"/list - list data\n" +
+		"/list - list books\n" +
 		"/add <title>|<author> - add new book with title and author\n" +
 		"/remove <id> - remove book with this id\n" +
 		"/edit <id>|<title>|<author>|<status> - edit book with this id\n" +
