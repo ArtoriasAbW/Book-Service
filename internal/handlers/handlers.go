@@ -37,9 +37,10 @@ func listFunc(s string) string {
 func helpFunc(s string) string {
 	return "/help - list commands\n" +
 		"/list - list data\n" +
-		"/add <title> <author> - add new book with title and author\n" +
-		"/read <id> - mark book with this id as readed\n" +
-		"/remove <id> - remove book with this id"
+		"/add <title>|<author> - add new book with title and author\n" +
+		"/remove <id> - remove book with this id\n" +
+		"/edit <id>|<title>|<author>|<status> - edit book with this id\n" +
+		"/read <id> - mark book with this id as readed"
 }
 
 func addFunc(data string) string {
@@ -48,7 +49,7 @@ func addFunc(data string) string {
 	if len(params) != 2 {
 		return errors.Wrapf(BadArgument, "%d items: <%v>", len(params), params).Error()
 	}
-	book, err := storage.NewBook(params[0], params[1], true)
+	book, err := storage.NewBook(params[0], params[1], "unread")
 	if err != nil {
 		return err.Error()
 	}
@@ -85,10 +86,25 @@ func readFunc(data string) string {
 	return fmt.Sprintf("book with id %d was mark as read", id)
 }
 
+func editFunc(data string) string {
+	log.Printf("edit command param: %s", data)
+	id, title, author, status, err := parseEditParams(data)
+	if err != nil {
+		return err.Error()
+	}
+	book, err := storage.CreateBook(id, title, author, status)
+	if err != nil {
+		return err.Error()
+	}
+	storage.Update(book)
+	return fmt.Sprintf("book with id %d was updated", id)
+}
+
 func AddHandlers(c *commander.Commander) {
 	c.RegisterHandler(helpCmd, helpFunc)
 	c.RegisterHandler(listCmd, listFunc)
 	c.RegisterHandler(addCmd, addFunc)
 	c.RegisterHandler(removeCmd, removeFunc)
 	c.RegisterHandler(readCmd, readFunc)
+	c.RegisterHandler(editCmd, editFunc)
 }

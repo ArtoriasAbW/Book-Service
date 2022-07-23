@@ -15,10 +15,6 @@ var BookExists = errors.New("book already exists")
 func init() {
 	log.Println("init storage")
 	data = make(map[uint]*Book)
-	book, _ := NewBook("История западной философии", "Бертран Рассел", true)
-	if err := Add(book); err != nil {
-		log.Panic(err)
-	}
 }
 
 func List() []*Book {
@@ -29,19 +25,19 @@ func List() []*Book {
 	return res
 }
 
-func Add(u *Book) error {
-	if _, ok := data[u.GetId()]; ok {
-		return errors.Wrap(BookExists, strconv.FormatUint(uint64(u.GetId()), 10))
+func Add(b *Book) error {
+	if _, ok := data[b.GetId()]; ok {
+		return errors.Wrap(BookExists, strconv.FormatUint(uint64(b.GetId()), 10))
 	}
-	data[u.GetId()] = u
+	data[b.GetId()] = b
 	return nil
 }
 
-func Update(u *Book) error {
-	if _, ok := data[u.GetId()]; !ok {
-		return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(u.GetId()), 10))
+func Update(b *Book) error {
+	if _, ok := data[b.GetId()]; !ok {
+		return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(b.GetId()), 10))
 	}
-	data[u.GetId()] = u
+	data[b.GetId()] = b
 	return nil
 }
 
@@ -59,4 +55,11 @@ func MarkRead(id uint) error {
 		return nil
 	}
 	return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
+}
+
+func GetBook(id uint) (Book, error) {
+	if _, ok := data[id]; ok {
+		return *data[id], nil
+	}
+	return Book{}, errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
 }
