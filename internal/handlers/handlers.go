@@ -96,7 +96,10 @@ func editFunc(data string) string {
 	if err != nil {
 		return err.Error()
 	}
-	storage.Update(book)
+	err = storage.Update(book)
+	if err != nil {
+		return err.Error()
+	}
 	return fmt.Sprintf("book with id %d was updated", id)
 }
 

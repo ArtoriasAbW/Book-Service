@@ -57,9 +57,3 @@ func MarkRead(id uint) error {
 	return errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
 }
 
-func GetBook(id uint) (Book, error) {
-	if _, ok := data[id]; ok {
-		return *data[id], nil
-	}
-	return Book{}, errors.Wrap(BookNotExists, strconv.FormatUint(uint64(id), 10))
-}

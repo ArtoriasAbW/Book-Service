@@ -21,6 +21,9 @@ func parseId(data string) (uint, error) {
 
 func parseEditParams(data string) (uint, string, string, string, error) {
 	params := strings.Split(data, "|")
+	for i := 0; i < len(params); i++ {
+		params[i] = strings.Trim(params[i], " ")
+	}
 	if len(params) != 4 {
 		return 0, "", "", "", errors.Wrapf(BadArgument, "%d items: <%v>", len(params), params)
 	}

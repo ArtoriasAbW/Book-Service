@@ -16,7 +16,7 @@ type Commander struct {
 }
 
 func Init() (*Commander, error) {
-	bot, err := tgbotapi.NewBotAPI(config.ApiKey)
+	bot, err := tgbotapi.NewBotAPI(config.GetApiKey())
 	if err != nil {
 		return nil, errors.Wrap(err, "init tgbot")
 	}
