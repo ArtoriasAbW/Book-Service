@@ -1,17 +1,14 @@
 package commander
 
 import (
-	"fmt"
 	"log"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/pkg/errors"
-	"gitlab.ozon.dev/kshmatov/masterclass1/config"
+	"gitlab.ozon.dev/ArtoriasAbW/homework-01/config"
 )
 
 type CmdHandler func(string) string
-
-var UnknownCommand = errors.New("unknown command")
 
 type Commander struct {
 	bot   *tgbotapi.BotAPI
@@ -19,7 +16,7 @@ type Commander struct {
 }
 
 func Init() (*Commander, error) {
-	bot, err := tgbotapi.NewBotAPI(config.ApiKey)
+	bot, err := tgbotapi.NewBotAPI(config.GetApiKey())
 	if err != nil {
 		return nil, errors.Wrap(err, "init tgbot")
 	}
@@ -51,15 +48,12 @@ func (c *Commander) Run() error {
 			if f, ok := c.route[cmd]; ok {
 				msg.Text = f(update.Message.CommandArguments())
 			} else {
-				msg.Text = "Unknown command"
+				msg.Text = "Unknown command. Type /help to see a list of commands."
 			}
-		} else {
-			log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
-			msg.Text = fmt.Sprintf("you send <%v>", update.Message.Text)
-		}
-		_, err := c.bot.Send(msg)
-		if err != nil {
-			return errors.Wrap(err, "send tg message")
+			_, err := c.bot.Send(msg)
+			if err != nil {
+				return errors.Wrap(err, "send tg message")
+			}
 		}
 	}
 	return nil
