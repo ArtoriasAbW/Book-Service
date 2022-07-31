@@ -17,35 +17,6 @@
   ],
   "paths": {
     "/v1/book": {
-      "get": {
-        "operationId": "Book_BookbGet",
-        "responses": {
-          "200": {
-            "description": "A successful response.",
-            "schema": {
-              "$ref": "#/definitions/apiBookGetResponse"
-            }
-          },
-          "default": {
-            "description": "An unexpected error response.",
-            "schema": {
-              "$ref": "#/definitions/rpcStatus"
-            }
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "query",
-            "required": false,
-            "type": "string",
-            "format": "uint64"
-          }
-        ],
-        "tags": [
-          "Book"
-        ]
-      },
       "delete": {
         "operationId": "Book_BookDelete",
         "responses": {
@@ -130,6 +101,37 @@
             "schema": {
               "$ref": "#/definitions/apiBookUpdateRequest"
             }
+          }
+        ],
+        "tags": [
+          "Book"
+        ]
+      }
+    },
+    "/v1/book/{id}": {
+      "get": {
+        "operationId": "Book_BookGet",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/apiBookGetResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "uint64"
           }
         ],
         "tags": [

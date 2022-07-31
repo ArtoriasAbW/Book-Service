@@ -29,6 +29,18 @@ func New() cachePkg.Interface {
 	}
 }
 
+func (c *cache) Get(id uint) (models.Book, error) {
+	c.poolCh <- struct{}{}
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+	book, ok := c.data[id]
+	if !ok {
+		return models.Book{}, errors.Wrapf(ErrBookNotExists, "book-id: [%d]", id)
+	}
+	<-c.poolCh
+	return book, nil
+}
+
 func (c *cache) Add(book models.Book) error {
 	c.poolCh <- struct{}{}
 	c.mu.Lock()

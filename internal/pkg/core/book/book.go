@@ -11,6 +11,7 @@ import (
 var ErrValidation = errors.New("invalid data")
 
 type Interface interface {
+	Get(id uint) (models.Book, error)
 	Create(book models.BookCreateInput) error
 	Update(book models.Book) error
 	Delete(id uint) error
@@ -27,6 +28,14 @@ func New() Interface {
 type core struct {
 	id    uint
 	cache cachePkg.Interface
+}
+
+func (c *core) Get(id uint) (models.Book, error) {
+	book, err := c.cache.Get(id)
+	if err != nil {
+		return book, errors.Wrap(ErrValidation, err.Error())
+	}
+	return book, nil
 }
 
 func (c *core) Create(bookInput models.BookCreateInput) error {

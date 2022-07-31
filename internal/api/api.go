@@ -23,7 +23,18 @@ type implementation struct {
 }
 
 func (i *implementation) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookGetResponse, error) {
-	return nil, errors.New("not implemented")
+	book, err := i.book.Get(uint(in.Id))
+	if err != nil {
+		if errors.Is(err, bookPkg.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.BookGetResponse{
+		Title:  book.Title,
+		Author: book.Author,
+		Unread: book.Unread,
+	}, nil
 }
 
 func (i *implementation) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {

@@ -9,7 +9,7 @@ import "google/api/annotations.proto";
 service Book {
     rpc BookGet(BookGetRequest) returns (BookGetResponse) {
         option (google.api.http) = {
-            get: "/v1/book"
+            get: "/v1/book/{id}"
         };
     }
     rpc BookCreate(BookCreateRequest) returns (BookCreateResponse) {
