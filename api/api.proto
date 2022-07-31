@@ -4,12 +4,37 @@ package book.api;
 
 option go_package = "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api;api";
 
+import "google/api/annotations.proto";
+
 service Book {
-    rpc BookGet(BookGetRequest) returns (BookGetResponse) {}
-    rpc BookCreate(BookCreateRequest) returns (BookCreateResponse) {}
-    rpc BookList(BookListRequest) returns (BookListResponse) {}
-    rpc BookUpdate(BookUpdateRequest) returns (BookUpdateResponse) {}
-    rpc BookDelete(BookDeleteRequest) returns (BookDeleteResponse) {}
+    rpc BookGet(BookGetRequest) returns (BookGetResponse) {
+        option (google.api.http) = {
+            get: "/v1/book"
+        };
+    }
+    rpc BookCreate(BookCreateRequest) returns (BookCreateResponse) {
+        option (google.api.http) = {
+            post: "/v1/book"
+            body: "*"
+        };
+    }
+    rpc BookList(BookListRequest) returns (BookListResponse) {
+        option (google.api.http) = {
+            get: "/v1/books"
+        };
+    }
+    rpc BookUpdate(BookUpdateRequest) returns (BookUpdateResponse) {
+        option (google.api.http) = {
+            put: "/v1/book"
+            body: "*"
+        };
+    }
+    rpc BookDelete(BookDeleteRequest) returns (BookDeleteResponse) {
+        option (google.api.http) = {
+            delete: "/v1/book"
+            body: "*"
+        };
+    }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
