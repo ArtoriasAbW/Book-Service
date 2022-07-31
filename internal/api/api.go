@@ -53,7 +53,10 @@ func (i *implementation) BookCreate(ctx context.Context, in *pb.BookCreateReques
 }
 
 func (i *implementation) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.BookListResponse, error) {
-	books := i.book.List()
+	books, err := i.book.List()
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 	result := make([]*pb.BookListResponse_Book, 0, len(books))
 	for _, book := range books {
 		result = append(result, &pb.BookListResponse_Book{

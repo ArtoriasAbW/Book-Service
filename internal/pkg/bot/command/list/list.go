@@ -28,7 +28,10 @@ func (c *command) Description() string {
 }
 
 func (c *command) Process(_ string) string {
-	bookList := c.book.List()
+	bookList, err := c.book.List()
+	if err != nil {
+		return err.Error()
+	}
 	if len(bookList) == 0 {
 		return "no books"
 	}
