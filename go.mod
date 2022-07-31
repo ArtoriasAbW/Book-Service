@@ -23,6 +23,6 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/kr/text v0.2.0 // indirect
 	golang.org/x/text v0.3.7 // indirect
-	google.golang.org/genproto v0.0.0-20220728213248-dd149ef739b9 // indirect
+	google.golang.org/genproto v0.0.0-20220728213248-dd149ef739b9
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

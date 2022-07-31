@@ -60,7 +60,6 @@ func headerMatcherREST(key string) (string, bool) {
 }
 
 func main() {
-	
 	go runREST()
 	runGRPC()
 }
