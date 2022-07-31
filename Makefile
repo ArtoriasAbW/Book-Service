@@ -1,9 +1,13 @@
 .PHONY: run
-run:
+run-bot:
 	go run cmd/bot/main.go
 
+run-server:
+	go run cmd/server/server.go
+
 build:
-	go build -o bin/bot cmd/bot/main.go
+	go build -o bin/bot cmd/bot/bot.go
+	go build -o bin/server cmd/server/server.go
 
 LOCAL_BIN:=$(CURDIR)/bin
 .PHONY: .deps
