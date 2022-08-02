@@ -22,7 +22,7 @@ type implementation struct {
 	book bookPkg.Interface
 }
 
-func (i *implementation) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookGetResponse, error) {
+func (i *implementation) BookGet(_ context.Context, in *pb.BookGetRequest) (*pb.BookGetResponse, error) {
 	book, err := i.book.Get(uint(in.Id))
 	if err != nil {
 		if errors.Is(err, bookPkg.ErrValidation) {
@@ -37,7 +37,7 @@ func (i *implementation) BookGet(ctx context.Context, in *pb.BookGetRequest) (*p
 	}, nil
 }
 
-func (i *implementation) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
+func (i *implementation) BookCreate(_ context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
 	if err := i.book.Create(models.BookCreateInput{
 		Title:  in.GetTitle(),
 		Author: in.GetAuthor(),
@@ -52,7 +52,7 @@ func (i *implementation) BookCreate(ctx context.Context, in *pb.BookCreateReques
 
 }
 
-func (i *implementation) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.BookListResponse, error) {
+func (i *implementation) BookList(_ context.Context, in *pb.BookListRequest) (*pb.BookListResponse, error) {
 	books, err := i.book.List()
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -71,7 +71,7 @@ func (i *implementation) BookList(ctx context.Context, in *pb.BookListRequest) (
 	}, nil
 }
 
-func (i *implementation) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {
+func (i *implementation) BookUpdate(_ context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {
 	if err := i.book.Update(
 		models.Book{
 			Id:     uint(in.Id),
@@ -86,7 +86,7 @@ func (i *implementation) BookUpdate(ctx context.Context, in *pb.BookUpdateReques
 	}
 	return &pb.BookUpdateResponse{}, nil
 }
-func (i *implementation) BookDelete(ctx context.Context, in *pb.BookDeleteRequest) (*pb.BookDeleteResponse, error) {
+func (i *implementation) BookDelete(_ context.Context, in *pb.BookDeleteRequest) (*pb.BookDeleteResponse, error) {
 	if err := i.book.Delete(uint(in.GetId())); err != nil {
 		if errors.Is(err, bookPkg.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())

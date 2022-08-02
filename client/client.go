@@ -14,7 +14,7 @@ type bookClient struct {
 	client pb.BookClient
 }
 
-func New(client pb.BookClient) bookClient {
+func new(client pb.BookClient) bookClient {
 	return bookClient{
 		client: client,
 	}
@@ -57,7 +57,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err.Error())
 	}
-	bc := New(pb.NewBookClient(conn))
+	bc := new(pb.NewBookClient(conn))
 	ctx := context.Background()
 	if err = bc.createBooks(ctx); err != nil {
 		log.Fatal(err.Error())
