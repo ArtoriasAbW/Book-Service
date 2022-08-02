@@ -1,3 +1,4 @@
 .idea
-apikey.go
 .env
+bin/
+buf.lock
