@@ -13,8 +13,8 @@ import (
 
 	apiPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/api"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/config"
-	bookPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/core/book"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/postgres"
+	servicePkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -38,12 +38,10 @@ func runGRPC() {
 		log.Fatal("ping database error", err)
 	}
 	repo := postgres.NewRepository(pool)
-	var book bookPkg.Interface
-	{
-		book = bookPkg.New(bookPkg.Deps{BookRepository: repo})
-	}
+
+	service := servicePkg.New(servicePkg.Deps{Repository: repo})
 	grpcServer := grpc.NewServer()
-	pb.RegisterBookServer(grpcServer, apiPkg.New(book))
+	pb.RegisterBookServer(grpcServer, apiPkg.New(service))
 	if err = grpcServer.Serve(listener); err != nil {
 		log.Fatal(err.Error())
 	}

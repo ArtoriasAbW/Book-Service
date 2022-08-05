@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api;api";
+import "google/api/annotations.proto";
+
+service Book {
+    rpc BookGet(BookGetRequest) returns (BookGetResponse) {
+        option (google.api.http) = {
+            get: "/v1/book/{id}"
+        };
+    }
+    rpc BookCreate(BookCreateRequest) returns (BookCreateResponse) {
+        option (google.api.http) = {
+            post: "/v1/book"
+            body: "*"
+        };
+    }
+    rpc BookList(BookListRequest) returns (BookListResponse) {
+        option (google.api.http) = {
+            get: "/v1/books"
+        };
+    }
+    rpc BookUpdate(BookUpdateRequest) returns (BookUpdateResponse) {
+        option (google.api.http) = {
+            put: "/v1/book"
+            body: "*"
+        };
+    }
+    rpc BookDelete(BookDeleteRequest) returns (BookDeleteResponse) {
+        option (google.api.http) = {
+            delete: "/v1/book"
+            body: "*"
+        };
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// BookCreate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message BookGetRequest {
+    uint64 id = 1;
+}
+
+message BookGetResponse {
+    string title = 1;
+    uint64 authorId = 2;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// BookCreate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message BookCreateRequest {
+    string title = 1;
+    uint64 authorId = 2;
+}
+
+message BookCreateResponse {}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// BookList endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message BookListRequest {}
+
+message BookListResponse {
+    repeated Book books = 1;
+
+    message Book {
+        uint64 id = 1;
+        string title = 2;
+        string authorId = 3;
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// BookUpdate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message BookUpdateRequest {
+    uint64 id = 1;
+    string title = 2;
+    uint64 authorId = 3;
+}
+message BookUpdateResponse {}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// BookDelete endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message BookDeleteRequest {
+    uint64 id = 1;
+}
+
+message BookDeleteResponse {}

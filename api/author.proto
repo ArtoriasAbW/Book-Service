@@ -1,103 +1,95 @@
 syntax = "proto3";
 
-package book.api;
+package api;
 
 option go_package = "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api;api";
-
 import "google/api/annotations.proto";
 
-service Book {
-    rpc BookGet(BookGetRequest) returns (BookGetResponse) {
+service Author {
+    rpc AuthorGet(AuthorGetRequest) returns (AuthorGetResponse) {
         option (google.api.http) = {
-            get: "/v1/book/{id}"
+            get: "/v1/author/{id}"
         };
     }
-    rpc BookCreate(BookCreateRequest) returns (BookCreateResponse) {
+    rpc AuthorCreate(AuthorCreateRequest) returns (AuthorCreateResponse) {
         option (google.api.http) = {
-            post: "/v1/book"
+            post: "/v1/author"
             body: "*"
         };
     }
-    rpc BookList(BookListRequest) returns (BookListResponse) {
+    rpc AuthorList(AuthorListRequest) returns (AuthorListResponse) {
         option (google.api.http) = {
-            get: "/v1/books"
+            get: "/v1/authors"
         };
     }
-    rpc BookUpdate(BookUpdateRequest) returns (BookUpdateResponse) {
+    rpc AuthorUpdate(AuthorUpdateRequest) returns (AuthorUpdateResponse) {
         option (google.api.http) = {
-            put: "/v1/book"
+            put: "/v1/author"
             body: "*"
         };
     }
-    rpc BookDelete(BookDeleteRequest) returns (BookDeleteResponse) {
+    rpc AuthorDelete(AuthorDeleteRequest) returns (AuthorDeleteResponse) {
         option (google.api.http) = {
-            delete: "/v1/book"
+            delete: "/v1/author"
             body: "*"
         };
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// BookCreate endpoint messages
+// AuthorCreate endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message BookGetRequest {
+message AuthorGetRequest {
     uint64 id = 1;
 }
 
-message BookGetResponse {
-    string title = 1;
-    string author = 2;
-    bool unread = 3;
+message AuthorGetResponse {
+    uint64 id = 1;
+    string name = 2;
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// BookCreate endpoint messages
+// AuthorCreate endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message BookCreateRequest {
-    string title = 1;
-    string author = 2;
-    bool unread = 3;
+message AuthorCreateRequest {
+    string name = 1;
 }
 
-message BookCreateResponse {}
+message AuthorCreateResponse {}
 
 // ---------------------------------------------------------------------------------------------------------------------
-// BookList endpoint messages
+// AuthorList endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message BookListRequest {}
+message AuthorListRequest {}
 
-message BookListResponse {
-    repeated Book books = 1;
+message AuthorListResponse {
+    repeated Author users = 1;
 
-    message Book {
+    message Author {
         uint64 id = 1;
-        string title = 2;
-        string author = 3;
-        bool unread = 4;
+        string name = 2;
     }
 }
 
 // ---------------------------------------------------------------------------------------------------------------------
-// BookUpdate endpoint messages
+// AuthorUpdate endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message BookUpdateRequest {
+message AuthorUpdateRequest {
     uint64 id = 1;
-    string title = 2;
-    string author = 3;
-    bool unread = 4;
+    string name = 2;
 }
-message BookUpdateResponse {}
+message AuthorUpdateResponse {}
 
 // ---------------------------------------------------------------------------------------------------------------------
-// BookDelete endpoint messages
+// AuthorDelete endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message BookDeleteRequest {
+message AuthorDeleteRequest {
     uint64 id = 1;
 }
 
-message BookDeleteResponse {}
+message AuthorDeleteResponse {}
