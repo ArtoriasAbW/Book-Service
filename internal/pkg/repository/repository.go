@@ -36,6 +36,6 @@ type Author interface {
 type Review interface {
 	AddReview(ctx context.Context, review repoModels.Review) (uint64, error)
 	GetReviewById(ctx context.Context, id uint) (repoModels.Review, error)
-	// DeleteReview()
+	DeleteReview(ctx context.Context, id uint) error
 	ListReviews(ctx context.Context, params repoModels.ReviewListInput) ([]repoModels.Review, error)
 }

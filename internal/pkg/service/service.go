@@ -39,6 +39,7 @@ type User interface {
 type Review interface {
 	GetReview(ctx context.Context, id uint) (models.Review, error)
 	AddReview(ctx context.Context, review models.Review) (uint64, error)
+	DeleteReview(ctx context.Context, id uint) error
 	ListReviews(ctx context.Context, params models.ReviewListInput) ([]models.Review, error)
 }
 

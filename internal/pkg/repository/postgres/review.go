@@ -68,7 +68,24 @@ func (r *repository) ListReviews(ctx context.Context, params repoModels.ReviewLi
 	}
 	var reviews []repoModels.Review
 	if err := pgxscan.Select(ctx, r.pool, &reviews, query, args...); err != nil {
-		return nil, fmt.Errorf("Repository.GetUsersByNiknameOrEmail: select: %w", err)
+		return nil, fmt.Errorf("Repository.ListReviews: select: %w", err)
 	}
 	return reviews, nil
+}
+
+func (r *repository) DeleteReview(ctx context.Context, id uint) error {
+	query, args, err := squirrel.Delete("reviews").
+		Where(
+			squirrel.Eq{
+				"id": id,
+			},
+		).PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository.DeleteReview: select: %w", err)
+	}
+	if _, err := r.pool.Exec(ctx, query, args...); err != nil {
+		return fmt.Errorf("Repository.DeleteReview: select: %w", err)
+	}
+	return nil
 }

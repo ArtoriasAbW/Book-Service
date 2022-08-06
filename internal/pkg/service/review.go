@@ -82,3 +82,9 @@ func (s *service) ListReviews(ctx context.Context, params models.ReviewListInput
 	}
 	return reviews, nil
 }
+
+func (s *service) DeleteReview(ctx context.Context, id uint) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	return s.Repository.DeleteReview(ctx, id)
+}
