@@ -11,7 +11,7 @@ import (
 )
 
 func (c *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*50))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
 	book, err := c.Repository.GetBookById(ctx, id)

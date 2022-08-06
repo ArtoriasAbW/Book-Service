@@ -54,11 +54,15 @@ func (r *repository) GetReviewById(ctx context.Context, id uint) (repoModels.Rev
 	return review, nil
 }
 
-func (r *repository) ListReviews(ctx context.Context) ([]repoModels.Review, error) {
-	query, args, err := squirrel.Select("*").
+func (r *repository) ListReviews(ctx context.Context, params repoModels.ReviewListInput) ([]repoModels.Review, error) {
+	preparedQuery := squirrel.Select("id", "rating", "review_text", "time", "user_id", "book_id").
 		From("reviews").
-		PlaceholderFormat(squirrel.Dollar).
-		ToSql()
+		OrderBy("time " + params.Order).
+		Offset(uint64(params.Offset))
+	if params.Limit > 0 {
+		preparedQuery = preparedQuery.Limit(uint64(params.Limit))
+	}
+	query, args, err := preparedQuery.PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
 		return []repoModels.Review{}, fmt.Errorf("Repo")
 	}

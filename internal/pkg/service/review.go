@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -11,7 +12,7 @@ import (
 )
 
 func (s *service) GetReview(ctx context.Context, id uint) (models.Review, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*50))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
 	review, err := s.Repository.GetReviewById(ctx, id)
@@ -53,10 +54,18 @@ func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uin
 	return id, err
 }
 
-func (s *service) ListReviews(ctx context.Context) ([]models.Review, error) {
+func (s *service) ListReviews(ctx context.Context, params models.ReviewListInput) ([]models.Review, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	reviewsRepo, err := s.Repository.ListReviews(ctx)
+	var repoParams repoModels.ReviewListInput
+	repoParams.Offset = params.Offset
+	repoParams.Limit = params.Limit
+	if strings.ToLower(params.Order) == "desc" {
+		repoParams.Order = "DESC"
+	} else {
+		repoParams.Order = "ASC"
+	}
+	reviewsRepo, err := s.Repository.ListReviews(ctx, repoParams)
 	if err != nil {
 		return nil, err
 	}

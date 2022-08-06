@@ -26,3 +26,9 @@ type Review struct {
 	BookId     uint      `db:"book_id"`
 	UserId     uint      `db:"user_id"`
 }
+
+type ReviewListInput struct {
+	Limit  uint32
+	Offset uint32
+	Order  string
+}

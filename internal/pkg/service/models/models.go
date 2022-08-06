@@ -13,7 +13,7 @@ type Author struct {
 type Book struct {
 	Id       uint   `db:"id"`
 	Title    string `db:"title"`
-	AuthorId uint    `db:"author_id"`
+	AuthorId uint   `db:"author_id"`
 }
 
 type Review struct {
@@ -23,4 +23,10 @@ type Review struct {
 	Time       uint   `db:"time"`
 	BookId     uint   `db:"book_id"`
 	UserId     uint   `db:"user_id"`
+}
+
+type ReviewListInput struct {
+	Limit  uint32
+	Offset uint32
+	Order  string
 }

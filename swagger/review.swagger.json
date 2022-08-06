@@ -9,7 +9,6 @@
       "name": "Review"
     }
   ],
-  "host": "localhost:8080",
   "consumes": [
     "application/json"
   ],
@@ -157,6 +156,28 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "Review"
         ]

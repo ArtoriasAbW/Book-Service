@@ -73,6 +73,9 @@ message ReviewCreateResponse {
 // ---------------------------------------------------------------------------------------------------------------------
 
 message ReviewListRequest {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    string order = 3;
 }
 
 message ReviewListResponse {

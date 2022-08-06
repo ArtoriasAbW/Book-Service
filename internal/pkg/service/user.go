@@ -11,7 +11,7 @@ import (
 )
 
 func (c *service) GetUser(ctx context.Context, id uint) (models.User, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*50))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
 	user, err := c.Repository.GetUserById(ctx, id)

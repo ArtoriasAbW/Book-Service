@@ -3,6 +3,7 @@ package api
 import (
 	"context"
 	"errors"
+	"fmt"
 
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
@@ -45,8 +46,14 @@ func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) 
 		Id: id,
 	}, nil
 }
+
 func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb.ReviewListResponse, error) {
-	reviews, err := h.service.ListReviews(ctx)
+	fmt.Println(in.GetLimit(), in.GetOffset(), in.GetOrder())
+	reviews, err := h.service.ListReviews(ctx, models.ReviewListInput{
+		Limit:  in.GetLimit(),
+		Offset: in.GetOffset(),
+		Order:  in.GetOrder(),
+	})
 	if err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())

@@ -11,7 +11,7 @@ import (
 )
 
 func (c *service) GetAuthor(ctx context.Context, id uint) (models.Author, error) {
-	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*50))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
 	author, err := c.Repository.GetAuthorById(ctx, id)
