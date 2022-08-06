@@ -46,7 +46,16 @@ func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) 
 	}, nil
 }
 func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb.ReviewListResponse, error) {
-	return nil, errors.New("unimplemented")
+	reviews, err := h.service.ListReviews(ctx)
+	if err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.ReviewListResponse{
+		Reviews: reviews,
+	}, nil
 }
 func (h *handler) ReviewUpdate(ctx context.Context, in *pb.ReviewUpdateRequest) (*pb.ReviewUpdateResponse, error) {
 	return nil, errors.New("unimplemented")

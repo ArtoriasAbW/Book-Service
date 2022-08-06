@@ -40,11 +40,11 @@ func (r *repository) GetReviewById(ctx context.Context, id uint) (repoModels.Rev
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
-		return repoModels.Review{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.Review{}, fmt.Errorf("Repository.GetReviewById: to sql: %w", err)
 	}
 	rows, err := r.pool.Query(ctx, query, args...)
 	if err != nil {
-		return repoModels.Review{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.Review{}, fmt.Errorf("Repository.GetReviewById: to sql: %w", err)
 	}
 	var data struct {
 		Id         uint      `db:"id"`
@@ -56,7 +56,7 @@ func (r *repository) GetReviewById(ctx context.Context, id uint) (repoModels.Rev
 	}
 	err = pgxscan.ScanOne(&data, rows)
 	if err != nil {
-		return repoModels.Review{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.Review{}, fmt.Errorf("Repository.GetReviewById: to sql: %w", err)
 	}
 	return repoModels.Review{
 		Id:         data.Id,
@@ -66,4 +66,19 @@ func (r *repository) GetReviewById(ctx context.Context, id uint) (repoModels.Rev
 		BookId:     data.BookId,
 		UserId:     data.UserId,
 	}, nil
+}
+
+func (r *repository) ListReviews(ctx context.Context) ([]repoModels.Review, error) {
+	query, args, err := squirrel.Select("*").
+		From("reviews").
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return []repoModels.Review{}, fmt.Errorf("Repo")
+	}
+	var reviews []repoModels.Review
+	if err := pgxscan.Select(ctx, r.pool, &reviews, query, args...); err != nil {
+		return nil, fmt.Errorf("Repository.GetUsersByNiknameOrEmail: select: %w", err)
+	}
+	return reviews, nil
 }

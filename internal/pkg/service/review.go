@@ -56,3 +56,28 @@ func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uin
 	id, err := s.Repository.AddReview(ctx, review)
 	return id, err
 }
+
+func (s *service) ListReviews(ctx context.Context) ([]models.Review, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	reviewsRepo, err := s.Repository.ListReviews(ctx)
+	if err != nil {
+		return nil, err
+	}
+	reviews := make([]models.Review, len(reviewsRepo))
+	for i, review := range reviewsRepo {
+		time, err := time.Parse(time.RFC3339, review.Time)
+		if err != nil {
+			return nil, errors.Wrap(ErrValidation, "read invalid time")
+		}
+		reviews[i] = models.Review{
+			Id:         review.Id,
+			Rating:     review.Rating,
+			ReviewText: review.ReviewText,
+			Time:       uint(time.Unix()),
+			BookId:     review.BookId,
+			UserId:     review.UserId,
+		}
+	}
+	return reviews, nil
+}

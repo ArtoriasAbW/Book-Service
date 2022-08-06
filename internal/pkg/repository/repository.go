@@ -37,5 +37,5 @@ type Review interface {
 	AddReview(ctx context.Context, review repoModels.Review) (uint64, error)
 	GetReviewById(ctx context.Context, id uint) (repoModels.Review, error)
 	// DeleteReview()
-	// ListReviews()
+	ListReviews(ctx context.Context) ([]repoModels.Review, error)
 }
