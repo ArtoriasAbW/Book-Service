@@ -41,8 +41,10 @@ func runGRPC() {
 
 	service := servicePkg.New(servicePkg.Deps{Repository: repo})
 	grpcServer := grpc.NewServer()
-	pb.RegisterBookServer(grpcServer, apiPkg.New(service))
-	pb.RegisterAuthorServer(grpcServer, apiPkg.New(service))
+	api := apiPkg.New(service)
+	pb.RegisterBookServer(grpcServer, api)
+	pb.RegisterAuthorServer(grpcServer, api)
+	pb.RegisterUserServer(grpcServer, api)
 	if err = grpcServer.Serve(listener); err != nil {
 		log.Fatal(err.Error())
 	}
@@ -60,6 +62,9 @@ func runREST() {
 		log.Fatal(err.Error())
 	}
 	if err := pb.RegisterAuthorHandlerFromEndpoint(ctx, mux, ":8081", opts); err != nil {
+		log.Fatal(err.Error())
+	}
+	if err := pb.RegisterUserHandlerFromEndpoint(ctx, mux, ":8081", opts); err != nil {
 		log.Fatal(err.Error())
 	}
 

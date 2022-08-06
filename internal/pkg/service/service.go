@@ -17,6 +17,7 @@ func New(d Deps) *service {
 type Interface interface {
 	Book
 	Author
+	User
 }
 
 type Book interface {
@@ -27,6 +28,11 @@ type Book interface {
 type Author interface {
 	GetAuthor(ctx context.Context, id uint) (models.Author, error)
 	AddAuthor(ctx context.Context, author models.Author) error
+}
+
+type User interface {
+	GetUser(ctx context.Context, id uint) (models.User, error)
+	AddUser(ctx context.Context, user models.User) error
 }
 
 type service struct {

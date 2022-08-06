@@ -9,7 +9,7 @@ import (
 type Interface interface {
 	Book
 	Author
-	// User
+	User
 }
 
 type Book interface {
@@ -21,8 +21,8 @@ type Book interface {
 type User interface {
 	AddUser(ctx context.Context, user repoModels.User) error
 	GetUserById(ctx context.Context, id uint) (repoModels.User, error)
-	DeleteUserById(ctx context.Context, id uint) error
-	ListUsers() ([]repoModels.User, error)
+	// DeleteUserById(ctx context.Context, id uint) error
+	// ListUsers() ([]repoModels.User, error)
 }
 
 type Author interface {

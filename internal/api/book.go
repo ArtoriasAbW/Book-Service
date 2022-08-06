@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *implementation) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookGetResponse, error) {
-	book, err := i.service.GetBook(ctx, uint(in.Id))
+func (h *handler) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookGetResponse, error) {
+	book, err := h.service.GetBook(ctx, uint(in.Id))
 	if err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -26,9 +26,9 @@ func (i *implementation) BookGet(ctx context.Context, in *pb.BookGetRequest) (*p
 	}, nil
 }
 
-func (i *implementation) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
+func (h *handler) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
 	fmt.Println("handler", in.GetTitle(), in.GetAuthorId())
-	if err := i.service.AddBook(ctx, models.Book{
+	if err := h.service.AddBook(ctx, models.Book{
 		Title:    in.GetTitle(),
 		AuthorId: uint(in.GetAuthorId()),
 	}); err != nil {
@@ -41,16 +41,16 @@ func (i *implementation) BookCreate(ctx context.Context, in *pb.BookCreateReques
 
 }
 
-func (i *implementation) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.BookListResponse, error) {
+func (h *handler) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.BookListResponse, error) {
 	return &pb.BookListResponse{
 		Books: nil,
 	}, errors.New("not implemented")
 }
 
-func (i *implementation) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {
+func (h *handler) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {
 
 	return &pb.BookUpdateResponse{}, nil
 }
-func (i *implementation) BookDelete(ctx context.Context, in *pb.BookDeleteRequest) (*pb.BookDeleteResponse, error) {
+func (h *handler) BookDelete(ctx context.Context, in *pb.BookDeleteRequest) (*pb.BookDeleteResponse, error) {
 	return &pb.BookDeleteResponse{}, nil
 }

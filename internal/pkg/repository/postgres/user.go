@@ -7,10 +7,10 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/georgysavva/scany/pgxscan"
-	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
+	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
-func (r *repository) AddUser(ctx context.Context, user models.User) error {
+func (r *repository) AddUser(ctx context.Context, user repoModels.User) error {
 	query, args, err := squirrel.Insert("users").
 		Columns("username").
 		Values(user.Username).
@@ -26,9 +26,9 @@ func (r *repository) AddUser(ctx context.Context, user models.User) error {
 	return nil
 }
 
-func (r *repository) GetUserById(ctx context.Context, id uint) (models.User, error) {
-	query, args, err := squirrel.Select("users").
-		Columns("id", "username").
+func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User, error) {
+	query, args, err := squirrel.Select("id", "username").
+		From("users").
 		Where(
 			squirrel.Eq{
 				"id": id,
@@ -37,16 +37,16 @@ func (r *repository) GetUserById(ctx context.Context, id uint) (models.User, err
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
-		return models.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
 	}
 	rows, err := r.pool.Query(ctx, query, args...)
 	if err != nil {
-		return models.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
 	}
-	var user models.User
+	var user repoModels.User
 	err = pgxscan.ScanOne(&user, rows)
 	if err != nil {
-		return models.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
 	}
 	return user, nil
 }

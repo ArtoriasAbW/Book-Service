@@ -9,6 +9,7 @@
       "name": "User"
     }
   ],
+  "host": "localhost:8080",
   "consumes": [
     "application/json"
   ],

@@ -6,7 +6,7 @@ import (
 )
 
 func New(service service.Interface) Interface {
-	return &implementation{
+	return &handler{
 		service: service,
 	}
 }
@@ -14,9 +14,10 @@ func New(service service.Interface) Interface {
 type Interface interface {
 	pb.BookServer
 	pb.AuthorServer
+	pb.UserServer
 }
 
-type implementation struct {
+type handler struct {
 	service service.Interface
 	unimplementedServer
 }

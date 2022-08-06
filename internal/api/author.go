@@ -12,8 +12,8 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-func (i *implementation) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest) (*pb.AuthorGetResponse, error) {
-	author, err := i.service.GetAuthor(ctx, uint(in.Id))
+func (h *handler) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest) (*pb.AuthorGetResponse, error) {
+	author, err := h.service.GetAuthor(ctx, uint(in.Id))
 	if err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -26,9 +26,9 @@ func (i *implementation) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest)
 	}, nil
 }
 
-func (i *implementation) AuthorCreate(ctx context.Context, in *pb.AuthorCreateRequest) (*pb.AuthorCreateResponse, error) {
+func (h *handler) AuthorCreate(ctx context.Context, in *pb.AuthorCreateRequest) (*pb.AuthorCreateResponse, error) {
 	fmt.Println("handler", in.Name)
-	if err := i.service.AddAuthor(ctx, models.Author{
+	if err := h.service.AddAuthor(ctx, models.Author{
 		Name: in.Name,
 	}); err != nil {
 		if errors.Is(err, service.ErrValidation) {
@@ -40,16 +40,16 @@ func (i *implementation) AuthorCreate(ctx context.Context, in *pb.AuthorCreateRe
 
 }
 
-func (i *implementation) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb.AuthorListResponse, error) {
+func (h *handler) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb.AuthorListResponse, error) {
 	return &pb.AuthorListResponse{
 		Authors: nil,
 	}, errors.New("not implemented")
 }
 
-func (i *implementation) AuthorUpdate(_ context.Context, in *pb.AuthorUpdateRequest) (*pb.AuthorUpdateResponse, error) {
+func (h *handler) AuthorUpdate(_ context.Context, in *pb.AuthorUpdateRequest) (*pb.AuthorUpdateResponse, error) {
 
 	return &pb.AuthorUpdateResponse{}, nil
 }
-func (i *implementation) AuthorDelete(_ context.Context, in *pb.AuthorDeleteRequest) (*pb.AuthorDeleteResponse, error) {
+func (h *handler) AuthorDelete(_ context.Context, in *pb.AuthorDeleteRequest) (*pb.AuthorDeleteResponse, error) {
 	return &pb.AuthorDeleteResponse{}, nil
 }
