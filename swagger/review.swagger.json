@@ -1,14 +1,15 @@
 {
   "swagger": "2.0",
   "info": {
-    "title": "api.proto",
+    "title": "review.proto",
     "version": "version not set"
   },
   "tags": [
     {
-      "name": "Book"
+      "name": "Review"
     }
   ],
+  "host": "localhost:8080",
   "consumes": [
     "application/json"
   ],
@@ -16,14 +17,14 @@
     "application/json"
   ],
   "paths": {
-    "/v1/book": {
+    "/v1/review": {
       "delete": {
-        "operationId": "Book_BookDelete",
+        "operationId": "Review_ReviewDelete",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiBookDeleteResponse"
+              "$ref": "#/definitions/apiReviewDeleteResponse"
             }
           },
           "default": {
@@ -39,21 +40,21 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiBookDeleteRequest"
+              "$ref": "#/definitions/apiReviewDeleteRequest"
             }
           }
         ],
         "tags": [
-          "Book"
+          "Review"
         ]
       },
       "post": {
-        "operationId": "Book_BookCreate",
+        "operationId": "Review_ReviewCreate",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiBookCreateResponse"
+              "$ref": "#/definitions/apiReviewCreateResponse"
             }
           },
           "default": {
@@ -69,21 +70,21 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiBookCreateRequest"
+              "$ref": "#/definitions/apiReviewCreateRequest"
             }
           }
         ],
         "tags": [
-          "Book"
+          "Review"
         ]
       },
       "put": {
-        "operationId": "Book_BookUpdate",
+        "operationId": "Review_ReviewUpdate",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiBookUpdateResponse"
+              "$ref": "#/definitions/apiReviewUpdateResponse"
             }
           },
           "default": {
@@ -99,23 +100,23 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/apiBookUpdateRequest"
+              "$ref": "#/definitions/apiReviewUpdateRequest"
             }
           }
         ],
         "tags": [
-          "Book"
+          "Review"
         ]
       }
     },
-    "/v1/book/{id}": {
+    "/v1/review/{id}": {
       "get": {
-        "operationId": "Book_BookGet",
+        "operationId": "Review_ReviewGet",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiBookGetResponse"
+              "$ref": "#/definitions/apiReviewGetResponse"
             }
           },
           "default": {
@@ -135,18 +136,18 @@
           }
         ],
         "tags": [
-          "Book"
+          "Review"
         ]
       }
     },
-    "/v1/books": {
+    "/v1/reviews": {
       "get": {
-        "operationId": "Book_BookList",
+        "operationId": "Review_ReviewList",
         "responses": {
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/apiBookListResponse"
+              "$ref": "#/definitions/apiReviewListResponse"
             }
           },
           "default": {
@@ -157,48 +158,61 @@
           }
         },
         "tags": [
-          "Book"
+          "Review"
         ]
       }
     }
   },
   "definitions": {
-    "BookListResponseBook": {
+    "ReviewListResponseReview": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
           "format": "uint64"
         },
-        "title": {
+        "rating": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reviewText": {
           "type": "string"
         },
-        "author": {
-          "type": "string"
+        "time": {
+          "type": "string",
+          "format": "uint64"
         },
-        "unread": {
-          "type": "boolean"
+        "bookId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
-    "apiBookCreateRequest": {
+    "apiReviewCreateRequest": {
       "type": "object",
       "properties": {
-        "title": {
+        "rating": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reviewText": {
           "type": "string"
         },
-        "author": {
-          "type": "string"
+        "bookId": {
+          "type": "string",
+          "format": "uint64"
         },
-        "unread": {
-          "type": "boolean"
+        "userId": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
-    "apiBookCreateResponse": {
-      "type": "object"
-    },
-    "apiBookDeleteRequest": {
+    "apiReviewCreateResponse": {
       "type": "object",
       "properties": {
         "id": {
@@ -207,53 +221,82 @@
         }
       }
     },
-    "apiBookDeleteResponse": {
-      "type": "object"
-    },
-    "apiBookGetResponse": {
+    "apiReviewDeleteRequest": {
       "type": "object",
       "properties": {
-        "title": {
-          "type": "string"
-        },
-        "author": {
-          "type": "string"
-        },
-        "unread": {
-          "type": "boolean"
+        "id": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
-    "apiBookListResponse": {
+    "apiReviewDeleteResponse": {
+      "type": "object"
+    },
+    "apiReviewGetResponse": {
       "type": "object",
       "properties": {
-        "books": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "rating": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reviewText": {
+          "type": "string"
+        },
+        "time": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "bookId": {
+          "type": "string",
+          "format": "uint64"
+        },
+        "userId": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
+    },
+    "apiReviewListResponse": {
+      "type": "object",
+      "properties": {
+        "reviews": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/BookListResponseBook"
+            "$ref": "#/definitions/ReviewListResponseReview"
           }
         }
       }
     },
-    "apiBookUpdateRequest": {
+    "apiReviewUpdateRequest": {
       "type": "object",
       "properties": {
         "id": {
           "type": "string",
           "format": "uint64"
         },
-        "title": {
+        "rating": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "reviewText": {
           "type": "string"
         },
-        "author": {
-          "type": "string"
+        "bookId": {
+          "type": "string",
+          "format": "uint64"
         },
-        "unread": {
-          "type": "boolean"
+        "userId": {
+          "type": "string",
+          "format": "uint64"
         }
       }
     },
-    "apiBookUpdateResponse": {
+    "apiReviewUpdateResponse": {
       "type": "object"
     },
     "protobufAny": {

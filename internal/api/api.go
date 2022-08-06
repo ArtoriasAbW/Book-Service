@@ -15,6 +15,7 @@ type Interface interface {
 	pb.BookServer
 	pb.AuthorServer
 	pb.UserServer
+	pb.ReviewServer
 }
 
 type handler struct {
@@ -26,4 +27,5 @@ type unimplementedServer struct {
 	pb.UnimplementedAuthorServer
 	pb.UnimplementedBookServer
 	pb.UnimplementedUserServer
+	pb.UnimplementedReviewServer
 }

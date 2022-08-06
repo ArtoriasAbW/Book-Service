@@ -20,7 +20,7 @@ type Review struct {
 	Id         uint   `db:"id"`
 	Rating     uint   `db:"rating"`
 	ReviewText string `db:"review_text"`
-	Time       uint   `db:"time"`
+	Time       string   `db:"time"`
 	BookId     uint   `db:"book_id"`
 	UserId     uint   `db:"user_id"`
 }

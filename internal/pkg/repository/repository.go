@@ -10,6 +10,7 @@ type Interface interface {
 	Book
 	Author
 	User
+	Review
 }
 
 type Book interface {
@@ -33,8 +34,8 @@ type Author interface {
 }
 
 type Review interface {
-	AddReview()
-	GetReview()
-	DeleteReview()
-	ListReviews()
+	AddReview(ctx context.Context, review repoModels.Review) (uint64, error)
+	GetReviewById(ctx context.Context, id uint) (repoModels.Review, error)
+	// DeleteReview()
+	// ListReviews()
 }

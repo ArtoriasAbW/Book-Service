@@ -45,6 +45,7 @@ func runGRPC() {
 	pb.RegisterBookServer(grpcServer, api)
 	pb.RegisterAuthorServer(grpcServer, api)
 	pb.RegisterUserServer(grpcServer, api)
+	pb.RegisterReviewServer(grpcServer, api)
 	if err = grpcServer.Serve(listener); err != nil {
 		log.Fatal(err.Error())
 	}
@@ -67,7 +68,9 @@ func runREST() {
 	if err := pb.RegisterUserHandlerFromEndpoint(ctx, mux, ":8081", opts); err != nil {
 		log.Fatal(err.Error())
 	}
-
+	if err := pb.RegisterReviewHandlerFromEndpoint(ctx, mux, ":8081", opts); err != nil {
+		log.Fatal(err.Error())
+	}
 	if err := http.ListenAndServe(":8080", mux); err != nil {
 		log.Fatal(err.Error())
 	}

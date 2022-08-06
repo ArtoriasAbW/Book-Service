@@ -18,6 +18,7 @@ type Interface interface {
 	Book
 	Author
 	User
+	Review
 }
 
 type Book interface {
@@ -33,6 +34,11 @@ type Author interface {
 type User interface {
 	GetUser(ctx context.Context, id uint) (models.User, error)
 	AddUser(ctx context.Context, user models.User) error
+}
+
+type Review interface {
+	GetReview(ctx context.Context, id uint) (models.Review, error)
+	AddReview(ctx context.Context, review models.Review) (uint64, error)
 }
 
 type service struct {

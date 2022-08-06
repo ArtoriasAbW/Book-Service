@@ -50,9 +50,5 @@ func (c *service) DeleteBook(ctx context.Context, id uint) error {
 }
 
 func (c *service) ListBooks(ctx context.Context) ([]models.Book, error) {
-	// ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Millisecond*50))
-	// defer cancel()
-	// var books []models.Book
-	// c.repository.
 	return nil, errors.New("not implemented")
 }
