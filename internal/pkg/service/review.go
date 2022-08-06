@@ -18,15 +18,11 @@ func (s *service) GetReview(ctx context.Context, id uint) (models.Review, error)
 	if err != nil {
 		return models.Review{}, err
 	}
-	time, err := time.Parse(time.RFC3339, review.Time)
-	if err != nil {
-		return models.Review{}, errors.Wrap(ErrValidation, "read invalid time")
-	}
 	return models.Review{
 		Id:         review.Id,
 		Rating:     review.Rating,
 		ReviewText: review.ReviewText,
-		Time:       uint(time.Unix()),
+		Time:       uint(review.Time.Unix()),
 		BookId:     review.BookId,
 		UserId:     review.UserId,
 	}, err
@@ -51,7 +47,7 @@ func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uin
 		return 0, errors.Wrap(ErrValidation, "rating must be less than 10")
 	}
 	review.Rating = reviewInput.Rating
-	review.Time = time.Now().Format(time.RFC3339)
+	review.Time = time.Now()
 	review.ReviewText = reviewInput.ReviewText
 	id, err := s.Repository.AddReview(ctx, review)
 	return id, err
@@ -66,15 +62,11 @@ func (s *service) ListReviews(ctx context.Context) ([]models.Review, error) {
 	}
 	reviews := make([]models.Review, len(reviewsRepo))
 	for i, review := range reviewsRepo {
-		time, err := time.Parse(time.RFC3339, review.Time)
-		if err != nil {
-			return nil, errors.Wrap(ErrValidation, "read invalid time")
-		}
 		reviews[i] = models.Review{
 			Id:         review.Id,
 			Rating:     review.Rating,
 			ReviewText: review.ReviewText,
-			Time:       uint(time.Unix()),
+			Time:       uint(review.Time.Unix()),
 			BookId:     review.BookId,
 			UserId:     review.UserId,
 		}

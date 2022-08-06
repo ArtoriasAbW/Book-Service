@@ -13,7 +13,7 @@ import (
 func (r *repository) AddReview(ctx context.Context, review repoModels.Review) (uint64, error) {
 	query, args, err := squirrel.Insert("reviews").
 		Columns("rating", "review_text", "time", "user_id", "book_id").
-		Values(review.Rating, review.ReviewText, review.Time, review.UserId, review.BookId).
+		Values(review.Rating, review.ReviewText, review.Time.Format(time.RFC3339), review.UserId, review.BookId).
 		PlaceholderFormat(squirrel.Dollar).
 		Suffix("RETURNING id").
 		ToSql()
@@ -46,26 +46,12 @@ func (r *repository) GetReviewById(ctx context.Context, id uint) (repoModels.Rev
 	if err != nil {
 		return repoModels.Review{}, fmt.Errorf("Repository.GetReviewById: to sql: %w", err)
 	}
-	var data struct {
-		Id         uint      `db:"id"`
-		Rating     uint      `db:"rating"`
-		ReviewText string    `db:"review_text"`
-		Time       time.Time `db:"time"`
-		BookId     uint      `db:"book_id"`
-		UserId     uint      `db:"user_id"`
-	}
-	err = pgxscan.ScanOne(&data, rows)
+	var review repoModels.Review
+	err = pgxscan.ScanOne(&review, rows)
 	if err != nil {
 		return repoModels.Review{}, fmt.Errorf("Repository.GetReviewById: to sql: %w", err)
 	}
-	return repoModels.Review{
-		Id:         data.Id,
-		Rating:     data.Rating,
-		ReviewText: data.ReviewText,
-		Time:       data.Time.Format(time.RFC3339),
-		BookId:     data.BookId,
-		UserId:     data.UserId,
-	}, nil
+	return review, nil
 }
 
 func (r *repository) ListReviews(ctx context.Context) ([]repoModels.Review, error) {

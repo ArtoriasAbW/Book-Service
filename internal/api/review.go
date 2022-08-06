@@ -53,10 +53,22 @@ func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+	result := make([]*pb.ReviewListResponse_Review, 0, len(reviews))
+	for _, review := range reviews {
+		result = append(result, &pb.ReviewListResponse_Review{
+			Id:         uint64(review.Id),
+			Rating:     uint32(review.Rating),
+			ReviewText: review.ReviewText,
+			Time:       uint64(review.Time),
+			BookId:     uint64(review.BookId),
+			UserId:     uint64(review.UserId),
+		})
+	}
 	return &pb.ReviewListResponse{
-		Reviews: reviews,
+		Reviews: result,
 	}, nil
 }
+
 func (h *handler) ReviewUpdate(ctx context.Context, in *pb.ReviewUpdateRequest) (*pb.ReviewUpdateResponse, error) {
 	return nil, errors.New("unimplemented")
 }
