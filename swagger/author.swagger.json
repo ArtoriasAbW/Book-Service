@@ -213,7 +213,7 @@
     "apiAuthorListResponse": {
       "type": "object",
       "properties": {
-        "users": {
+        "authors": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/AuthorListResponseAuthor"

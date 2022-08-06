@@ -2,10 +2,10 @@ package postgres
 
 import "github.com/jackc/pgx/v4/pgxpool"
 
-type Repository struct {
+type repository struct {
 	pool *pgxpool.Pool
 }
 
-func NewRepository(pool *pgxpool.Pool) *Repository {
-	return &Repository{pool: pool}
+func NewRepository(pool *pgxpool.Pool) *repository {
+	return &repository{pool: pool}
 }

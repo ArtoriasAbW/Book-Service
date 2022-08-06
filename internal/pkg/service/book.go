@@ -10,10 +10,8 @@ import (
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
 )
 
-var ErrValidation = errors.New("invalid data")
-
-func (c *service) GetBook(id uint) (models.Book, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Millisecond*50))
+func (c *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*50))
 	defer cancel()
 	var err error
 	book, err := c.Repository.GetBookById(ctx, id)
@@ -24,31 +22,34 @@ func (c *service) GetBook(id uint) (models.Book, error) {
 	}, err
 }
 
-func (c *service) AddBook(bookInput models.Book) error {
+func (c *service) AddBook(ctx context.Context, bookInput models.Book) error {
 	fmt.Println("service:", bookInput)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Millisecond*1000))
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var book repoModels.Book
-	// TODO: check author id
+	_, err := c.Repository.GetAuthorById(ctx, bookInput.AuthorId)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "author with this id doesn't exist")
+	}
 	book.AuthorId = bookInput.AuthorId
 	if bookInput.Title == "" {
 		return errors.Wrap(ErrValidation, "field: [title] cannot be empty")
 	}
 	book.Title = bookInput.Title
-	err := c.Repository.AddBook(ctx, book)
+	err = c.Repository.AddBook(ctx, book)
 	return err
 }
 
-func (c *service) Update(book models.Book) error {
+func (c *service) UpdateBook(ctx context.Context, book models.Book) error {
 	return errors.New("not implemented")
 }
 
-func (c *service) Delete(id uint) error {
+func (c *service) DeleteBook(ctx context.Context, id uint) error {
 	return errors.New("not implemented")
 
 }
 
-func (c *service) List() ([]models.Book, error) {
+func (c *service) ListBooks(ctx context.Context) ([]models.Book, error) {
 	// ctx, cancel := context.WithTimeout(context.Background(), time.Duration(time.Millisecond*50))
 	// defer cancel()
 	// var books []models.Book

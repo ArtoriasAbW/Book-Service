@@ -11,7 +11,7 @@ import (
 
 // TODO: один сервис или несколько???
 // странное поведение, id инкрементиться при неудачной вставке, нужно решить это (можно делать проверку на существование автора перед этим)
-func (r *Repository) AddBook(ctx context.Context, book repoModels.Book) error {
+func (r *repository) AddBook(ctx context.Context, book repoModels.Book) error {
 	fmt.Println("repo:", book)
 	query, args, err := squirrel.Insert("books").
 		Columns("title, author_id").
@@ -28,7 +28,7 @@ func (r *Repository) AddBook(ctx context.Context, book repoModels.Book) error {
 	return nil
 }
 
-func (r *Repository) GetBookById(ctx context.Context, id uint) (repoModels.Book, error) {
+func (r *repository) GetBookById(ctx context.Context, id uint) (repoModels.Book, error) {
 	query, args, err := squirrel.Select("id, title, author_id").
 		From("books").
 		Where(
@@ -53,7 +53,7 @@ func (r *Repository) GetBookById(ctx context.Context, id uint) (repoModels.Book,
 	return book, nil
 }
 
-func (r *Repository) DeleteBook(ctx context.Context, id uint) error {
+func (r *repository) DeleteBook(ctx context.Context, id uint) error {
 	query, args, err := squirrel.Delete("books").
 		Where(
 			squirrel.Eq{

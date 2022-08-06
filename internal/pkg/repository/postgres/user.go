@@ -10,7 +10,7 @@ import (
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
-func (r *Repository) AddUser(ctx context.Context, user models.User) error {
+func (r *repository) AddUser(ctx context.Context, user models.User) error {
 	query, args, err := squirrel.Insert("users").
 		Columns("username").
 		Values(user.Username).
@@ -26,7 +26,7 @@ func (r *Repository) AddUser(ctx context.Context, user models.User) error {
 	return nil
 }
 
-func (r *Repository) GetUserById(ctx context.Context, id uint) (models.User, error) {
+func (r *repository) GetUserById(ctx context.Context, id uint) (models.User, error) {
 	query, args, err := squirrel.Select("users").
 		Columns("id", "username").
 		Where(
@@ -51,10 +51,10 @@ func (r *Repository) GetUserById(ctx context.Context, id uint) (models.User, err
 	return user, nil
 }
 
-func (r *Repository) DeleteUser() error {
+func (r *repository) DeleteUser() error {
 	return errors.New("delete user: not implemented")
 }
 
-func (r *Repository) ListUsers() error {
+func (r *repository) ListUsers() error {
 	return errors.New("list users: not implemented")
 }

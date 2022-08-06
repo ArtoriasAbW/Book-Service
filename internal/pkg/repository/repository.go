@@ -8,6 +8,7 @@ import (
 
 type Interface interface {
 	Book
+	Author
 	// User
 }
 
@@ -25,8 +26,8 @@ type User interface {
 }
 
 type Author interface {
-	AddAuthor()
-	GetAuthor()
+	AddAuthor(ctx context.Context, author repoModels.Author) error
+	GetAuthorById(ctx context.Context, id uint) (repoModels.Author, error)
 	// DeleteAuthor()
 	// ListAuthors()
 }

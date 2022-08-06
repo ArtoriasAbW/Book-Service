@@ -9,7 +9,6 @@
       "name": "Book"
     }
   ],
-  "host": "localhost:8080",
   "consumes": [
     "application/json"
   ],
