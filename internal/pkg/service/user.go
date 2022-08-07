@@ -26,7 +26,7 @@ func (s *service) AddUser(ctx context.Context, userInput models.User) (uint64, e
 	defer cancel()
 	var user repoModels.User
 	if userInput.Username == "" {
-		return 0, errors.Wrap(ErrValidation, "field: [title] cannot be empty")
+		return 0, errors.Wrap(ErrValidation, "field: [username] cannot be empty")
 	}
 	user.Username = userInput.Username
 	id, err := s.Repository.AddUser(ctx, user)
@@ -37,6 +37,23 @@ func (s *service) DeleteUser(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	err := s.Repository.DeleteUser(ctx, id)
+	return err
+}
+
+func (s *service) UpdateUser(ctx context.Context, userInput models.User) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	var user repoModels.User
+	_, err := s.Repository.GetUserById(ctx, userInput.Id)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "user with this id doesn't exist")
+	}
+	user.Id = userInput.Id
+	if userInput.Username == "" {
+		return errors.Wrap(ErrValidation, "field: [username] cannot be empty")
+	}
+	user.Username = userInput.Username
+	err = s.Repository.UpdateUser(ctx, user)
 	return err
 }
 

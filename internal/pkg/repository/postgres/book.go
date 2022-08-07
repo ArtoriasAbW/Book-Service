@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
@@ -90,4 +91,8 @@ func (r *repository) ListBooks(ctx context.Context, params repoModels.ListInput)
 		return nil, fmt.Errorf("Repository.ListBooks: select: %w", err)
 	}
 	return books, nil
+}
+
+func (r *repository) UpdateBook(ctx context.Context, book repoModels.Book) error {
+	return errors.New("not implemented")
 }

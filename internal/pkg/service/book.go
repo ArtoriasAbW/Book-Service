@@ -39,8 +39,26 @@ func (s *service) AddBook(ctx context.Context, bookInput models.Book) (uint64, e
 	return id, err
 }
 
-func (s *service) UpdateBook(ctx context.Context, book models.Book) error {
-	return errors.New("not implemented")
+func (s *service) UpdateBook(ctx context.Context, bookInput models.Book) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	var book repoModels.Book
+	_, err := s.Repository.GetAuthorById(ctx, bookInput.AuthorId)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "author with this id doesn't exist")
+	}
+	book.Id = bookInput.Id
+	_, err = s.Repository.GetBookById(ctx, book.Id)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "book with this id doesn't exist")
+	}
+	book.AuthorId = bookInput.AuthorId
+	if bookInput.Title == "" {
+		return errors.Wrap(ErrValidation, "field: [title] cannot be empty")
+	}
+	book.Title = bookInput.Title
+	err = s.Repository.UpdateBook(ctx, book)
+	return err
 }
 
 func (s *service) DeleteBook(ctx context.Context, id uint) error {

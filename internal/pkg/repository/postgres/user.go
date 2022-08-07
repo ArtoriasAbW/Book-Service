@@ -83,11 +83,30 @@ func (r *repository) ListUsers(ctx context.Context, params repoModels.ListInput)
 	}
 	query, args, err := preparedQuery.PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
-		return []repoModels.User{}, fmt.Errorf("Repository.ListUsers: select: %w", err)
+		return []repoModels.User{}, fmt.Errorf("Repository.ListUsers: to sql: %w", err)
 	}
 	var users []repoModels.User
 	if err := pgxscan.Select(ctx, r.pool, &users, query, args...); err != nil {
-		return nil, fmt.Errorf("Repository.ListUsers: select: %w", err)
+		return nil, fmt.Errorf("Repository.ListUsers: to sql: %w", err)
 	}
 	return users, nil
+}
+
+func (r *repository) UpdateUser(ctx context.Context, newUser repoModels.User) error {
+	query, args, err := squirrel.Update("users").
+		Set("username", newUser.Username).
+		Where(
+			squirrel.Eq{
+				"id": newUser.Id,
+			},
+		).PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository:UpdateUser: to sql: %w", err)
+	}
+	_, err = r.pool.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("Repository:UpdateUser: to sql: %w", err)
+	}
+	return nil
 }

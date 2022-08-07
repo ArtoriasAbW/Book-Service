@@ -60,7 +60,16 @@ func (h *handler) UserList(ctx context.Context, in *pb.UserListRequest) (*pb.Use
 	}, nil
 }
 func (h *handler) UserUpdate(ctx context.Context, in *pb.UserUpdateRequest) (*pb.UserUpdateResponse, error) {
-	return nil, errors.New("unimplemented")
+	if err := h.service.UpdateUser(ctx, models.User{
+		Id:       uint(in.GetId()),
+		Username: in.GetUsername(),
+	}); err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.UserUpdateResponse{}, nil
 }
 func (h *handler) UserDelete(ctx context.Context, in *pb.UserDeleteRequest) (*pb.UserDeleteResponse, error) {
 	err := h.service.DeleteUser(ctx, uint(in.GetId()))

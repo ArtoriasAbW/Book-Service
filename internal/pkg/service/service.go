@@ -26,6 +26,7 @@ type book interface {
 	AddBook(ctx context.Context, bookInput models.Book) (uint64, error)
 	DeleteBook(ctx context.Context, id uint) error
 	ListBooks(ctx context.Context, params models.ListInput) ([]models.Book, error)
+	UpdateBook(ctx context.Context, bookInput models.Book) error
 }
 
 type author interface {
@@ -40,6 +41,7 @@ type user interface {
 	AddUser(ctx context.Context, user models.User) (uint64, error)
 	DeleteUser(ctx context.Context, id uint) error
 	ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error)
+	UpdateUser(ctx context.Context, userInput models.User) error
 }
 
 type review interface {

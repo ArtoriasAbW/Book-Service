@@ -18,6 +18,7 @@ type book interface {
 	GetBookById(ctx context.Context, id uint) (repoModels.Book, error)
 	DeleteBook(ctx context.Context, id uint) error
 	ListBooks(ctx context.Context, params repoModels.ListInput) ([]repoModels.Book, error)
+	UpdateBook(ctx context.Context, book repoModels.Book) error
 }
 
 type user interface {
@@ -25,6 +26,7 @@ type user interface {
 	GetUserById(ctx context.Context, id uint) (repoModels.User, error)
 	DeleteUser(ctx context.Context, id uint) error
 	ListUsers(ctx context.Context, params repoModels.ListInput) ([]repoModels.User, error)
+	UpdateUser(ctx context.Context, newUser repoModels.User) error
 }
 
 type author interface {
