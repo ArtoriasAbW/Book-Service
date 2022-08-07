@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"strings"
 	"time"
 
@@ -30,7 +29,6 @@ func (s *service) GetReview(ctx context.Context, id uint) (models.Review, error)
 }
 
 func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uint64, error) {
-	fmt.Println("service:", reviewInput)
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var review repoModels.Review

@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -22,7 +21,6 @@ func (c *service) GetAuthor(ctx context.Context, id uint) (models.Author, error)
 }
 
 func (c *service) AddAuthor(ctx context.Context, authorInput models.Author) error {
-	fmt.Println("service:", authorInput)
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var author repoModels.Author
@@ -34,11 +32,14 @@ func (c *service) AddAuthor(ctx context.Context, authorInput models.Author) erro
 	return err
 }
 
-func (c *service) UpdateAuthor(book models.Book) error {
-	return errors.New("not implemented")
+func (c *service) DeleteAuthor(ctx context.Context, id uint) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	err := c.Repository.DeleteAuthor(ctx, id)
+	return err
 }
 
-func (c *service) DeleteAuthor(id uint) error {
+func (c *service) UpdateAuthor(id uint) error {
 	return errors.New("not implemented")
 
 }

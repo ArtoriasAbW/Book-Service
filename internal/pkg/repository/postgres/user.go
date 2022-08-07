@@ -51,8 +51,24 @@ func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User,
 	return user, nil
 }
 
-func (r *repository) DeleteUser() error {
-	return errors.New("delete user: not implemented")
+func (r *repository) DeleteUser(ctx context.Context, id uint) error {
+	query, args, err := squirrel.Delete("users").
+		Where(
+			squirrel.Eq{
+				"id": id,
+			},
+		).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository.DeleteUser: to sql: %w", err)
+	}
+	_, err = r.pool.Exec(ctx, query, args...)
+
+	if err != nil {
+		return fmt.Errorf("Repository.DeleteUser: to sql: %w", err)
+	}
+	return nil
 }
 
 func (r *repository) ListUsers() error {

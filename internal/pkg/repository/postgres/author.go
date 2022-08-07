@@ -46,7 +46,26 @@ func (r *repository) GetAuthorById(ctx context.Context, id uint) (repoModels.Aut
 	var author repoModels.Author
 	err = pgxscan.ScanOne(&author, rows)
 	if err != nil {
-		return repoModels.Author{}, fmt.Errorf("Repository.GetBookById: to sql: %w", err)
+		return repoModels.Author{}, fmt.Errorf("Repository.GetAuthorById: to sql: %w", err)
 	}
 	return author, nil
+}
+
+func (r *repository) DeleteAuthor(ctx context.Context, id uint) error {
+	query, args, err := squirrel.Delete("authors").
+		Where(
+			squirrel.Eq{
+				"id": id,
+			},
+		).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository.DeleteAuthor: to sql: %w", err)
+	}
+	_, err = r.pool.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("Repository.DeleteAuthor: to sql: %w", err)
+	}
+	return nil
 }

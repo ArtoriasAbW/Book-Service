@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -10,11 +9,11 @@ import (
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
 )
 
-func (c *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
+func (s *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
-	book, err := c.Repository.GetBookById(ctx, id)
+	book, err := s.Repository.GetBookById(ctx, id)
 	return models.Book{
 		Id:       book.Id,
 		Title:    book.Title,
@@ -22,12 +21,11 @@ func (c *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
 	}, err
 }
 
-func (c *service) AddBook(ctx context.Context, bookInput models.Book) error {
-	fmt.Println("service:", bookInput)
+func (s *service) AddBook(ctx context.Context, bookInput models.Book) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var book repoModels.Book
-	_, err := c.Repository.GetAuthorById(ctx, bookInput.AuthorId)
+	_, err := s.Repository.GetAuthorById(ctx, bookInput.AuthorId)
 	if err != nil {
 		return errors.Wrap(ErrValidation, "author with this id doesn't exist")
 	}
@@ -36,19 +34,21 @@ func (c *service) AddBook(ctx context.Context, bookInput models.Book) error {
 		return errors.Wrap(ErrValidation, "field: [title] cannot be empty")
 	}
 	book.Title = bookInput.Title
-	err = c.Repository.AddBook(ctx, book)
+	err = s.Repository.AddBook(ctx, book)
 	return err
 }
 
-func (c *service) UpdateBook(ctx context.Context, book models.Book) error {
+func (s *service) UpdateBook(ctx context.Context, book models.Book) error {
 	return errors.New("not implemented")
 }
 
-func (c *service) DeleteBook(ctx context.Context, id uint) error {
-	return errors.New("not implemented")
-
+func (s *service) DeleteBook(ctx context.Context, id uint) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	err := s.Repository.DeleteBook(ctx, id)
+	return err
 }
 
-func (c *service) ListBooks(ctx context.Context) ([]models.Book, error) {
+func (s *service) ListBooks(ctx context.Context) ([]models.Book, error) {
 	return nil, errors.New("not implemented")
 }

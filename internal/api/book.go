@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
@@ -27,7 +26,6 @@ func (h *handler) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookG
 }
 
 func (h *handler) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
-	fmt.Println("handler", in.GetTitle(), in.GetAuthorId())
 	if err := h.service.AddBook(ctx, models.Book{
 		Title:    in.GetTitle(),
 		AuthorId: uint(in.GetAuthorId()),
@@ -52,5 +50,11 @@ func (h *handler) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb
 	return &pb.BookUpdateResponse{}, nil
 }
 func (h *handler) BookDelete(ctx context.Context, in *pb.BookDeleteRequest) (*pb.BookDeleteResponse, error) {
+	if err := h.service.DeleteBook(ctx, uint(in.GetId())); err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 	return &pb.BookDeleteResponse{}, nil
 }

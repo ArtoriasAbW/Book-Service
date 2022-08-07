@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
@@ -13,7 +12,7 @@ import (
 )
 
 func (h *handler) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest) (*pb.AuthorGetResponse, error) {
-	author, err := h.service.GetAuthor(ctx, uint(in.Id))
+	author, err := h.service.GetAuthor(ctx, uint(in.GetId()))
 	if err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -27,9 +26,8 @@ func (h *handler) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest) (*pb.A
 }
 
 func (h *handler) AuthorCreate(ctx context.Context, in *pb.AuthorCreateRequest) (*pb.AuthorCreateResponse, error) {
-	fmt.Println("handler", in.Name)
 	if err := h.service.AddAuthor(ctx, models.Author{
-		Name: in.Name,
+		Name: in.GetName(),
 	}); err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -50,6 +48,12 @@ func (h *handler) AuthorUpdate(_ context.Context, in *pb.AuthorUpdateRequest) (*
 
 	return &pb.AuthorUpdateResponse{}, nil
 }
-func (h *handler) AuthorDelete(_ context.Context, in *pb.AuthorDeleteRequest) (*pb.AuthorDeleteResponse, error) {
+func (h *handler) AuthorDelete(ctx context.Context, in *pb.AuthorDeleteRequest) (*pb.AuthorDeleteResponse, error) {
+	if err := h.service.DeleteAuthor(ctx, uint(in.GetId())); err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 	return &pb.AuthorDeleteResponse{}, nil
 }

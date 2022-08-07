@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/pkg/errors"
@@ -22,7 +21,6 @@ func (s *service) GetUser(ctx context.Context, id uint) (models.User, error) {
 }
 
 func (s *service) AddUser(ctx context.Context, userInput models.User) error {
-	fmt.Println("service:", userInput)
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var user repoModels.User
@@ -31,5 +29,12 @@ func (s *service) AddUser(ctx context.Context, userInput models.User) error {
 	}
 	user.Username = userInput.Username
 	err := s.Repository.AddUser(ctx, user)
+	return err
+}
+
+func (s *service) DeleteUser(ctx context.Context, id uint) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	err := s.Repository.DeleteUser(ctx, id)
 	return err
 }

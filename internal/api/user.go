@@ -43,5 +43,12 @@ func (h *handler) UserUpdate(ctx context.Context, in *pb.UserUpdateRequest) (*pb
 	return nil, errors.New("unimplemented")
 }
 func (h *handler) UserDelete(ctx context.Context, in *pb.UserDeleteRequest) (*pb.UserDeleteResponse, error) {
-	return nil, errors.New("unimplemented")
+	err := h.service.DeleteUser(ctx, uint(in.GetId()))
+	if err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.UserDeleteResponse{}, nil
 }

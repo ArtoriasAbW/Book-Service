@@ -12,7 +12,6 @@ import (
 // TODO: один сервис или несколько???
 // странное поведение, id инкрементиться при неудачной вставке, нужно решить это (можно делать проверку на существование автора перед этим)
 func (r *repository) AddBook(ctx context.Context, book repoModels.Book) error {
-	fmt.Println("repo:", book)
 	query, args, err := squirrel.Insert("books").
 		Columns("title, author_id").
 		Values(book.Title, book.AuthorId).

@@ -7,33 +7,33 @@ import (
 )
 
 type Interface interface {
-	Book
-	Author
-	User
-	Review
+	book
+	author
+	user
+	review
 }
 
-type Book interface {
+type book interface {
 	AddBook(ctx context.Context, b repoModels.Book) error
 	GetBookById(ctx context.Context, id uint) (repoModels.Book, error)
 	DeleteBook(ctx context.Context, id uint) error
 }
 
-type User interface {
+type user interface {
 	AddUser(ctx context.Context, user repoModels.User) error
 	GetUserById(ctx context.Context, id uint) (repoModels.User, error)
-	// DeleteUserById(ctx context.Context, id uint) error
+	DeleteUser(ctx context.Context, id uint) error
 	// ListUsers() ([]repoModels.User, error)
 }
 
-type Author interface {
+type author interface {
 	AddAuthor(ctx context.Context, author repoModels.Author) error
 	GetAuthorById(ctx context.Context, id uint) (repoModels.Author, error)
-	// DeleteAuthor()
+	DeleteAuthor(ctx context.Context, id uint) error
 	// ListAuthors()
 }
 
-type Review interface {
+type review interface {
 	AddReview(ctx context.Context, review repoModels.Review) (uint64, error)
 	GetReviewById(ctx context.Context, id uint) (repoModels.Review, error)
 	DeleteReview(ctx context.Context, id uint) error
