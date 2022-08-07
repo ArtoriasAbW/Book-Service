@@ -40,9 +40,28 @@ func (h *handler) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb
 }
 
 func (h *handler) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.BookListResponse, error) {
+	books, err := h.service.ListBooks(ctx, models.ListInput{
+		Limit:  in.GetLimit(),
+		Offset: in.GetOffset(),
+		Order:  in.GetOrder(),
+	})
+	if err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	result := make([]*pb.BookListResponse_Book, 0, len(books))
+	for _, book := range books {
+		result = append(result, &pb.BookListResponse_Book{
+			Id:       uint64(book.Id),
+			Title:    book.Title,
+			AuthorId: uint64(book.AuthorId),
+		})
+	}
 	return &pb.BookListResponse{
-		Books: nil,
-	}, errors.New("not implemented")
+		Books: result,
+	}, nil
 }
 
 func (h *handler) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {

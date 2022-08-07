@@ -52,10 +52,10 @@ func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uin
 	return id, err
 }
 
-func (s *service) ListReviews(ctx context.Context, params models.ReviewListInput) ([]models.Review, error) {
+func (s *service) ListReviews(ctx context.Context, params models.ListInput) ([]models.Review, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	var repoParams repoModels.ReviewListInput
+	var repoParams repoModels.ListInput
 	repoParams.Offset = params.Offset
 	repoParams.Limit = params.Limit
 	if strings.ToLower(params.Order) == "desc" {

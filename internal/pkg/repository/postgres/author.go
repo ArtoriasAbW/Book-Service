@@ -69,3 +69,22 @@ func (r *repository) DeleteAuthor(ctx context.Context, id uint) error {
 	}
 	return nil
 }
+
+func (r *repository) ListAuthors(ctx context.Context, params repoModels.ListInput) ([]repoModels.Author, error) {
+	preparedQuery := squirrel.Select("id", "author").
+		From("authors").
+		OrderBy("author " + params.Order).
+		Offset(uint64(params.Offset))
+	if params.Limit > 0 {
+		preparedQuery = preparedQuery.Limit(uint64(params.Limit))
+	}
+	query, args, err := preparedQuery.PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		return []repoModels.Author{}, fmt.Errorf("Repository.ListAuthors: select: %w", err)
+	}
+	var authors []repoModels.Author
+	if err := pgxscan.Select(ctx, r.pool, &authors, query, args...); err != nil {
+		return nil, fmt.Errorf("Repository.ListAuthors: select: %w", err)
+	}
+	return authors, nil
+}

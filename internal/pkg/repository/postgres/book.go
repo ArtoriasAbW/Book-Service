@@ -9,8 +9,6 @@ import (
 	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
-// TODO: один сервис или несколько???
-// странное поведение, id инкрементиться при неудачной вставке, нужно решить это (можно делать проверку на существование автора перед этим)
 func (r *repository) AddBook(ctx context.Context, book repoModels.Book) error {
 	query, args, err := squirrel.Insert("books").
 		Columns("title, author_id").
@@ -70,4 +68,23 @@ func (r *repository) DeleteBook(ctx context.Context, id uint) error {
 		return fmt.Errorf("Repository.DeleteBook: to sql: %w", err)
 	}
 	return nil
+}
+
+func (r *repository) ListBooks(ctx context.Context, params repoModels.ListInput) ([]repoModels.Book, error) {
+	preparedQuery := squirrel.Select("id", "title", "author_id").
+		From("books").
+		OrderBy("title " + params.Order).
+		Offset(uint64(params.Offset))
+	if params.Limit > 0 {
+		preparedQuery = preparedQuery.Limit(uint64(params.Limit))
+	}
+	query, args, err := preparedQuery.PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		return []repoModels.Book{}, fmt.Errorf("Repository.ListBooks: select: %w", err)
+	}
+	var books []repoModels.Book
+	if err := pgxscan.Select(ctx, r.pool, &books, query, args...); err != nil {
+		return nil, fmt.Errorf("Repository.ListBooks: select: %w", err)
+	}
+	return books, nil
 }

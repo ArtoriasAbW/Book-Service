@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -49,6 +50,28 @@ func (s *service) DeleteBook(ctx context.Context, id uint) error {
 	return err
 }
 
-func (s *service) ListBooks(ctx context.Context) ([]models.Book, error) {
-	return nil, errors.New("not implemented")
+func (s *service) ListBooks(ctx context.Context, params models.ListInput) ([]models.Book, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	var repoParams repoModels.ListInput
+	repoParams.Offset = params.Offset
+	repoParams.Limit = params.Limit
+	if strings.ToLower(params.Order) == "desc" {
+		repoParams.Order = "DESC"
+	} else {
+		repoParams.Order = "ASC"
+	}
+	booksRepo, err := s.Repository.ListBooks(ctx, repoParams)
+	if err != nil {
+		return nil, err
+	}
+	books := make([]models.Book, len(booksRepo))
+	for i, book := range booksRepo {
+		books[i] = models.Book{
+			Id:       book.Id,
+			Title:    book.Title,
+			AuthorId: book.AuthorId,
+		}
+	}
+	return books, nil
 }

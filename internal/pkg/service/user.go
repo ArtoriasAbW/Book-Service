@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"strings"
 	"time"
 
 	"github.com/pkg/errors"
@@ -37,4 +38,29 @@ func (s *service) DeleteUser(ctx context.Context, id uint) error {
 	defer cancel()
 	err := s.Repository.DeleteUser(ctx, id)
 	return err
+}
+
+func (s *service) ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error) {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	var repoParams repoModels.ListInput
+	repoParams.Offset = params.Offset
+	repoParams.Limit = params.Limit
+	if strings.ToLower(params.Order) == "desc" {
+		repoParams.Order = "DESC"
+	} else {
+		repoParams.Order = "ASC"
+	}
+	usersRepo, err := s.Repository.ListUsers(ctx, repoParams)
+	if err != nil {
+		return nil, err
+	}
+	users := make([]models.User, len(usersRepo))
+	for i, user := range usersRepo {
+		users[i] = models.User{
+			Id:       user.Id,
+			Username: user.Username,
+		}
+	}
+	return users, nil
 }

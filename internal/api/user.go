@@ -37,7 +37,27 @@ func (h *handler) UserCreate(ctx context.Context, in *pb.UserCreateRequest) (*pb
 	return &pb.UserCreateResponse{}, nil
 }
 func (h *handler) UserList(ctx context.Context, in *pb.UserListRequest) (*pb.UserListResponse, error) {
-	return nil, errors.New("unimplemented")
+	users, err := h.service.ListUsers(ctx, models.ListInput{
+		Limit:  in.GetLimit(),
+		Offset: in.GetOffset(),
+		Order:  in.GetOrder(),
+	})
+	if err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	result := make([]*pb.UserListResponse_User, 0, len(users))
+	for _, user := range users {
+		result = append(result, &pb.UserListResponse_User{
+			Id:       uint64(user.Id),
+			Username: user.Username,
+		})
+	}
+	return &pb.UserListResponse{
+		Users: result,
+	}, nil
 }
 func (h *handler) UserUpdate(ctx context.Context, in *pb.UserUpdateRequest) (*pb.UserUpdateResponse, error) {
 	return nil, errors.New("unimplemented")

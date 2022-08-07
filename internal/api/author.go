@@ -39,9 +39,27 @@ func (h *handler) AuthorCreate(ctx context.Context, in *pb.AuthorCreateRequest) 
 }
 
 func (h *handler) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb.AuthorListResponse, error) {
+	authors, err := h.service.ListAuthors(ctx, models.ListInput{
+		Limit:  in.GetLimit(),
+		Offset: in.GetOffset(),
+		Order:  in.GetOrder(),
+	})
+	if err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	result := make([]*pb.AuthorListResponse_Author, 0, len(authors))
+	for _, author := range authors {
+		result = append(result, &pb.AuthorListResponse_Author{
+			Id:   uint64(author.Id),
+			Name: author.Name,
+		})
+	}
 	return &pb.AuthorListResponse{
-		Authors: nil,
-	}, errors.New("not implemented")
+		Authors: result,
+	}, nil
 }
 
 func (h *handler) AuthorUpdate(_ context.Context, in *pb.AuthorUpdateRequest) (*pb.AuthorUpdateResponse, error) {

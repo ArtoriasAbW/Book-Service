@@ -25,7 +25,7 @@ type Review struct {
 	UserId     uint   `db:"user_id"`
 }
 
-type ReviewListInput struct {
+type ListInput struct {
 	Limit  uint32
 	Offset uint32
 	Order  string

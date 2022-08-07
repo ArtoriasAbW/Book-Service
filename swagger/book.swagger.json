@@ -156,6 +156,28 @@
             }
           }
         },
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          }
+        ],
         "tags": [
           "Book"
         ]
@@ -174,7 +196,8 @@
           "type": "string"
         },
         "authorId": {
-          "type": "string"
+          "type": "string",
+          "format": "uint64"
         }
       }
     },

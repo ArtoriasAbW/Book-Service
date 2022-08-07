@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
@@ -71,6 +70,21 @@ func (r *repository) DeleteUser(ctx context.Context, id uint) error {
 	return nil
 }
 
-func (r *repository) ListUsers() error {
-	return errors.New("list users: not implemented")
+func (r *repository) ListUsers(ctx context.Context, params repoModels.ListInput) ([]repoModels.User, error) {
+	preparedQuery := squirrel.Select("id", "username").
+		From("users").
+		OrderBy("username " + params.Order).
+		Offset(uint64(params.Offset))
+	if params.Limit > 0 {
+		preparedQuery = preparedQuery.Limit(uint64(params.Limit))
+	}
+	query, args, err := preparedQuery.PlaceholderFormat(squirrel.Dollar).ToSql()
+	if err != nil {
+		return []repoModels.User{}, fmt.Errorf("Repository.ListUsers: select: %w", err)
+	}
+	var users []repoModels.User
+	if err := pgxscan.Select(ctx, r.pool, &users, query, args...); err != nil {
+		return nil, fmt.Errorf("Repository.ListUsers: select: %w", err)
+	}
+	return users, nil
 }

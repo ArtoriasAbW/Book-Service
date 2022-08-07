@@ -63,7 +63,11 @@ message UserCreateResponse {}
 // UserList endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message UserListRequest {}
+message UserListRequest {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    string order = 3;
+}
 
 message UserListResponse {
     repeated User users = 1;

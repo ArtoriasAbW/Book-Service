@@ -25,25 +25,28 @@ type book interface {
 	GetBook(ctx context.Context, id uint) (models.Book, error)
 	AddBook(ctx context.Context, bookInput models.Book) error
 	DeleteBook(ctx context.Context, id uint) error
+	ListBooks(ctx context.Context, params models.ListInput) ([]models.Book, error)
 }
 
 type author interface {
 	GetAuthor(ctx context.Context, id uint) (models.Author, error)
 	AddAuthor(ctx context.Context, author models.Author) error
 	DeleteAuthor(ctx context.Context, id uint) error
+	ListAuthors(ctx context.Context, params models.ListInput) ([]models.Author, error)
 }
 
 type user interface {
 	GetUser(ctx context.Context, id uint) (models.User, error)
 	AddUser(ctx context.Context, user models.User) error
 	DeleteUser(ctx context.Context, id uint) error
+	ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error)
 }
 
 type review interface {
 	GetReview(ctx context.Context, id uint) (models.Review, error)
 	AddReview(ctx context.Context, review models.Review) (uint64, error)
 	DeleteReview(ctx context.Context, id uint) error
-	ListReviews(ctx context.Context, params models.ReviewListInput) ([]models.Review, error)
+	ListReviews(ctx context.Context, params models.ListInput) ([]models.Review, error)
 }
 
 type service struct {

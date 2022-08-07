@@ -47,7 +47,7 @@ func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) 
 }
 
 func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb.ReviewListResponse, error) {
-	reviews, err := h.service.ListReviews(ctx, models.ReviewListInput{
+	reviews, err := h.service.ListReviews(ctx, models.ListInput{
 		Limit:  in.GetLimit(),
 		Offset: in.GetOffset(),
 		Order:  in.GetOrder(),

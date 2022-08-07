@@ -63,7 +63,11 @@ message AuthorCreateResponse {}
 // AuthorList endpoint messages
 // ---------------------------------------------------------------------------------------------------------------------
 
-message AuthorListRequest {}
+message AuthorListRequest {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    string order = 3;
+}
 
 message AuthorListResponse {
     repeated Author authors = 1;
