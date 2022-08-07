@@ -25,7 +25,7 @@ func (h *handler) UserGet(ctx context.Context, in *pb.UserGetRequest) (*pb.UserG
 	}, nil
 }
 func (h *handler) UserCreate(ctx context.Context, in *pb.UserCreateRequest) (*pb.UserCreateResponse, error) {
-	err := h.service.AddUser(ctx, models.User{
+	id, err := h.service.AddUser(ctx, models.User{
 		Username: in.GetUsername(),
 	})
 	if err != nil {
@@ -34,7 +34,7 @@ func (h *handler) UserCreate(ctx context.Context, in *pb.UserCreateRequest) (*pb
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	return &pb.UserCreateResponse{}, nil
+	return &pb.UserCreateResponse{Id: id}, nil
 }
 func (h *handler) UserList(ctx context.Context, in *pb.UserListRequest) (*pb.UserListResponse, error) {
 	users, err := h.service.ListUsers(ctx, models.ListInput{

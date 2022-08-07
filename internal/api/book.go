@@ -26,16 +26,17 @@ func (h *handler) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookG
 }
 
 func (h *handler) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
-	if err := h.service.AddBook(ctx, models.Book{
+	id, err := h.service.AddBook(ctx, models.Book{
 		Title:    in.GetTitle(),
 		AuthorId: uint(in.GetAuthorId()),
-	}); err != nil {
+	})
+	if err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	return &pb.BookCreateResponse{}, nil
+	return &pb.BookCreateResponse{Id: id}, nil
 
 }
 

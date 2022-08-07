@@ -57,7 +57,9 @@ message AuthorCreateRequest {
     string name = 1;
 }
 
-message AuthorCreateResponse {}
+message AuthorCreateResponse {
+    uint64 id = 1;
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // AuthorList endpoint messages

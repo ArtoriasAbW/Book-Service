@@ -9,20 +9,23 @@ import (
 	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
-func (r *repository) AddUser(ctx context.Context, user repoModels.User) error {
+func (r *repository) AddUser(ctx context.Context, user repoModels.User) (uint64, error) {
 	query, args, err := squirrel.Insert("users").
 		Columns("username").
 		Values(user.Username).
+		Suffix("RETURNING id").
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("Repository.AddUser: to sql: %w", err)
+		return 0, fmt.Errorf("Repository.AddUser: to sql: %w", err)
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	row := r.pool.QueryRow(ctx, query, args...)
+	var id uint64
+	err = row.Scan(&id)
 	if err != nil {
-		return fmt.Errorf("Repository.AddUser: to sql: %w", err)
+		return 0, fmt.Errorf("Repository.AddUser: to sql: %w", err)
 	}
-	return nil
+	return id, nil
 }
 
 func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User, error) {

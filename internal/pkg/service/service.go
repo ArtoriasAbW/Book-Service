@@ -23,21 +23,21 @@ type Interface interface {
 
 type book interface {
 	GetBook(ctx context.Context, id uint) (models.Book, error)
-	AddBook(ctx context.Context, bookInput models.Book) error
+	AddBook(ctx context.Context, bookInput models.Book) (uint64, error)
 	DeleteBook(ctx context.Context, id uint) error
 	ListBooks(ctx context.Context, params models.ListInput) ([]models.Book, error)
 }
 
 type author interface {
 	GetAuthor(ctx context.Context, id uint) (models.Author, error)
-	AddAuthor(ctx context.Context, author models.Author) error
+	AddAuthor(ctx context.Context, author models.Author) (uint64, error)
 	DeleteAuthor(ctx context.Context, id uint) error
 	ListAuthors(ctx context.Context, params models.ListInput) ([]models.Author, error)
 }
 
 type user interface {
 	GetUser(ctx context.Context, id uint) (models.User, error)
-	AddUser(ctx context.Context, user models.User) error
+	AddUser(ctx context.Context, user models.User) (uint64, error)
 	DeleteUser(ctx context.Context, id uint) error
 	ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error)
 }

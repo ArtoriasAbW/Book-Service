@@ -21,16 +21,16 @@ func (s *service) GetAuthor(ctx context.Context, id uint) (models.Author, error)
 	}, err
 }
 
-func (s *service) AddAuthor(ctx context.Context, authorInput models.Author) error {
+func (s *service) AddAuthor(ctx context.Context, authorInput models.Author) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var author repoModels.Author
 	if authorInput.Name == "" {
-		return errors.Wrap(ErrValidation, "field: [name] cannot be empty")
+		return 0, errors.Wrap(ErrValidation, "field: [name] cannot be empty")
 	}
 	author.Name = authorInput.Name
-	err := s.Repository.AddAuthor(ctx, author)
-	return err
+	id, err := s.Repository.AddAuthor(ctx, author)
+	return id, err
 }
 
 func (c *service) DeleteAuthor(ctx context.Context, id uint) error {

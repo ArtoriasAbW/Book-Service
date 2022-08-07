@@ -206,7 +206,13 @@
       }
     },
     "apiAuthorCreateResponse": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
     },
     "apiAuthorDeleteRequest": {
       "type": "object",

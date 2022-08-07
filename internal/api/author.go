@@ -26,15 +26,16 @@ func (h *handler) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest) (*pb.A
 }
 
 func (h *handler) AuthorCreate(ctx context.Context, in *pb.AuthorCreateRequest) (*pb.AuthorCreateResponse, error) {
-	if err := h.service.AddAuthor(ctx, models.Author{
+	id, err := h.service.AddAuthor(ctx, models.Author{
 		Name: in.GetName(),
-	}); err != nil {
+	})
+	if err != nil {
 		if errors.Is(err, service.ErrValidation) {
 			return nil, status.Error(codes.InvalidArgument, err.Error())
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
-	return &pb.AuthorCreateResponse{}, nil
+	return &pb.AuthorCreateResponse{Id: id}, nil
 
 }
 

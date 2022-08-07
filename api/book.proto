@@ -58,7 +58,9 @@ message BookCreateRequest {
     uint64 authorId = 2;
 }
 
-message BookCreateResponse {}
+message BookCreateResponse {
+    uint64 id = 1;
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // BookList endpoint messages

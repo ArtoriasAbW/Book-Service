@@ -9,20 +9,23 @@ import (
 	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
-func (r *repository) AddBook(ctx context.Context, book repoModels.Book) error {
+func (r *repository) AddBook(ctx context.Context, book repoModels.Book) (uint64, error) {
 	query, args, err := squirrel.Insert("books").
 		Columns("title, author_id").
 		Values(book.Title, book.AuthorId).
+		Suffix("RETURNING id").
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("Repository.BookAdd: to sql: %w", err)
+		return 0, fmt.Errorf("Repository.BookAdd: to sql: %w", err)
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	row := r.pool.QueryRow(ctx, query, args...)
+	var id uint64
+	err = row.Scan(&id)
 	if err != nil {
-		return fmt.Errorf("Repository.BookAdd: to sql: %w", err)
+		return 0, fmt.Errorf("Repository.BookAdd: to sql: %w", err)
 	}
-	return nil
+	return id, nil
 }
 
 func (r *repository) GetBookById(ctx context.Context, id uint) (repoModels.Book, error) {

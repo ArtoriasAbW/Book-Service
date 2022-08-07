@@ -214,7 +214,13 @@
       }
     },
     "apiBookCreateResponse": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uint64"
+        }
+      }
     },
     "apiBookDeleteRequest": {
       "type": "object",

@@ -21,16 +21,16 @@ func (s *service) GetUser(ctx context.Context, id uint) (models.User, error) {
 	}, err
 }
 
-func (s *service) AddUser(ctx context.Context, userInput models.User) error {
+func (s *service) AddUser(ctx context.Context, userInput models.User) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var user repoModels.User
 	if userInput.Username == "" {
-		return errors.Wrap(ErrValidation, "field: [title] cannot be empty")
+		return 0, errors.Wrap(ErrValidation, "field: [title] cannot be empty")
 	}
 	user.Username = userInput.Username
-	err := s.Repository.AddUser(ctx, user)
-	return err
+	id, err := s.Repository.AddUser(ctx, user)
+	return id, err
 }
 
 func (s *service) DeleteUser(ctx context.Context, id uint) error {

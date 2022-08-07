@@ -57,7 +57,9 @@ message UserCreateRequest {
     string username = 1;
 }
 
-message UserCreateResponse {}
+message UserCreateResponse {
+    uint64 id = 1;
+}
 
 // ---------------------------------------------------------------------------------------------------------------------
 // UserList endpoint messages

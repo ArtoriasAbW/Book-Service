@@ -22,21 +22,21 @@ func (s *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
 	}, err
 }
 
-func (s *service) AddBook(ctx context.Context, bookInput models.Book) error {
+func (s *service) AddBook(ctx context.Context, bookInput models.Book) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	var book repoModels.Book
 	_, err := s.Repository.GetAuthorById(ctx, bookInput.AuthorId)
 	if err != nil {
-		return errors.Wrap(ErrValidation, "author with this id doesn't exist")
+		return 0, errors.Wrap(ErrValidation, "author with this id doesn't exist")
 	}
 	book.AuthorId = bookInput.AuthorId
 	if bookInput.Title == "" {
-		return errors.Wrap(ErrValidation, "field: [title] cannot be empty")
+		return 0, errors.Wrap(ErrValidation, "field: [title] cannot be empty")
 	}
 	book.Title = bookInput.Title
-	err = s.Repository.AddBook(ctx, book)
-	return err
+	id, err := s.Repository.AddBook(ctx, book)
+	return id, err
 }
 
 func (s *service) UpdateBook(ctx context.Context, book models.Book) error {
