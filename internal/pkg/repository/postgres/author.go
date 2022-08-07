@@ -91,3 +91,25 @@ func (r *repository) ListAuthors(ctx context.Context, params repoModels.ListInpu
 	}
 	return authors, nil
 }
+
+func (r *repository) UpdateAuthor(ctx context.Context, author repoModels.Author) error {
+	query, args, err := squirrel.Update("authors").
+		SetMap(
+			map[string]interface{}{
+				"author": author.Name,
+			}).
+		Where(
+			squirrel.Eq{
+				"id": author.Id,
+			}).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository.UpdateAuthor: to sql")
+	}
+	_, err = r.pool.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("Repository.UpdateAuthor: to sql")
+	}
+	return nil
+}

@@ -34,6 +34,7 @@ type author interface {
 	AddAuthor(ctx context.Context, author models.Author) (uint64, error)
 	DeleteAuthor(ctx context.Context, id uint) error
 	ListAuthors(ctx context.Context, params models.ListInput) ([]models.Author, error)
+	UpdateAuthor(ctx context.Context, authorInput models.Author) error
 }
 
 type user interface {
@@ -49,6 +50,8 @@ type review interface {
 	AddReview(ctx context.Context, review models.Review) (uint64, error)
 	DeleteReview(ctx context.Context, id uint) error
 	ListReviews(ctx context.Context, params models.ListInput) ([]models.Review, error)
+	UpdateReview(ctx context.Context, reviewInput models.Review) error
+
 }
 
 type service struct {

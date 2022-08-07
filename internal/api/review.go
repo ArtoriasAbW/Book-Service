@@ -75,7 +75,20 @@ func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb
 }
 
 func (h *handler) ReviewUpdate(ctx context.Context, in *pb.ReviewUpdateRequest) (*pb.ReviewUpdateResponse, error) {
-	return nil, errors.New("unimplemented")
+	if err := h.service.UpdateReview(ctx, models.Review{
+		Id:         uint(in.GetId()),
+		Rating:     uint(in.GetRating()),
+		ReviewText: in.GetReviewText(),
+		BookId:     uint(in.GetBookId()),
+		UserId:     uint(in.GetUserId()),
+	}); err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+	return &pb.ReviewUpdateResponse{}, nil
+
 }
 func (h *handler) ReviewDelete(ctx context.Context, in *pb.ReviewDeleteRequest) (*pb.ReviewDeleteResponse, error) {
 	err := h.service.DeleteReview(ctx, uint(in.GetId()))

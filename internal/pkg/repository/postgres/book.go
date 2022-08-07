@@ -2,7 +2,6 @@ package postgres
 
 import (
 	"context"
-	"errors"
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
@@ -84,15 +83,34 @@ func (r *repository) ListBooks(ctx context.Context, params repoModels.ListInput)
 	}
 	query, args, err := preparedQuery.PlaceholderFormat(squirrel.Dollar).ToSql()
 	if err != nil {
-		return []repoModels.Book{}, fmt.Errorf("Repository.ListBooks: select: %w", err)
+		return []repoModels.Book{}, fmt.Errorf("Repository.ListBooks: to sql: %w", err)
 	}
 	var books []repoModels.Book
 	if err := pgxscan.Select(ctx, r.pool, &books, query, args...); err != nil {
-		return nil, fmt.Errorf("Repository.ListBooks: select: %w", err)
+		return nil, fmt.Errorf("Repository.ListBooks: to sql: %w", err)
 	}
 	return books, nil
 }
 
 func (r *repository) UpdateBook(ctx context.Context, book repoModels.Book) error {
-	return errors.New("not implemented")
+	query, args, err := squirrel.Update("books").
+		SetMap(
+			map[string]interface{}{
+				"title":     book.Title,
+				"author_id": book.AuthorId,
+			}).
+		Where(
+			squirrel.Eq{
+				"id": book.Id,
+			}).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository.UpdateBook: to sql")
+	}
+	_, err = r.pool.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("Repository.UpdateBook: to sql")
+	}
+	return nil
 }

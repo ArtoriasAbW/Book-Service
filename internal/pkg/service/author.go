@@ -33,16 +33,28 @@ func (s *service) AddAuthor(ctx context.Context, authorInput models.Author) (uin
 	return id, err
 }
 
-func (c *service) DeleteAuthor(ctx context.Context, id uint) error {
+func (s *service) DeleteAuthor(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	err := c.Repository.DeleteAuthor(ctx, id)
+	err := s.Repository.DeleteAuthor(ctx, id)
 	return err
 }
 
-func (c *service) UpdateAuthor(id uint) error {
-	return errors.New("not implemented")
-
+func (s *service) UpdateAuthor(ctx context.Context, authorInput models.Author) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	var author repoModels.Author
+	_, err := s.Repository.GetAuthorById(ctx, authorInput.Id)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "author with this id doesn't exist")
+	}
+	author.Id = authorInput.Id
+	if authorInput.Name == "" {
+		return errors.Wrap(ErrValidation, "field: [name] cannot be empty")
+	}
+	author.Name = authorInput.Name
+	err = s.Repository.UpdateAuthor(ctx, author)
+	return err
 }
 
 func (s *service) ListAuthors(ctx context.Context, params models.ListInput) ([]models.Author, error) {

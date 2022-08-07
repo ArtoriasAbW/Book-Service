@@ -34,6 +34,7 @@ type author interface {
 	GetAuthorById(ctx context.Context, id uint) (repoModels.Author, error)
 	DeleteAuthor(ctx context.Context, id uint) error
 	ListAuthors(ctx context.Context, params repoModels.ListInput) ([]repoModels.Author, error)
+	UpdateAuthor(ctx context.Context, author repoModels.Author) error
 }
 
 type review interface {
@@ -41,4 +42,5 @@ type review interface {
 	GetReviewById(ctx context.Context, id uint) (repoModels.Review, error)
 	DeleteReview(ctx context.Context, id uint) error
 	ListReviews(ctx context.Context, params repoModels.ListInput) ([]repoModels.Review, error)
+	UpdateReview(ctx context.Context, review repoModels.Review) error
 }

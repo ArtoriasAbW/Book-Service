@@ -89,3 +89,29 @@ func (r *repository) DeleteReview(ctx context.Context, id uint) error {
 	}
 	return nil
 }
+
+func (r *repository) UpdateReview(ctx context.Context, review repoModels.Review) error {
+	query, args, err := squirrel.Update("reviews").
+		SetMap(
+			map[string]interface{}{
+				"rating":      review.Rating,
+				"review_text": review.ReviewText,
+				"time":        review.Time,
+				"book_id":     review.BookId,
+				"user_id":     review.UserId,
+			}).
+		Where(
+			squirrel.Eq{
+				"id": review.Id,
+			}).
+		PlaceholderFormat(squirrel.Dollar).
+		ToSql()
+	if err != nil {
+		return fmt.Errorf("Repository.UpdateReview: to sql")
+	}
+	_, err = r.pool.Exec(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("Repository.UpdateReview: to sql")
+	}
+	return nil
+}

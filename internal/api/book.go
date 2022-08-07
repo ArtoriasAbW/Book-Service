@@ -66,7 +66,16 @@ func (h *handler) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.Boo
 }
 
 func (h *handler) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {
-
+	if err := h.service.UpdateBook(ctx, models.Book{
+		Id:       uint(in.GetId()),
+		Title:    in.GetTitle(),
+		AuthorId: uint(in.GetAuthorId()),
+	}); err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 	return &pb.BookUpdateResponse{}, nil
 }
 func (h *handler) BookDelete(ctx context.Context, in *pb.BookDeleteRequest) (*pb.BookDeleteResponse, error) {

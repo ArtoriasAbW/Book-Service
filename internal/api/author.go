@@ -63,8 +63,16 @@ func (h *handler) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb
 	}, nil
 }
 
-func (h *handler) AuthorUpdate(_ context.Context, in *pb.AuthorUpdateRequest) (*pb.AuthorUpdateResponse, error) {
-
+func (h *handler) AuthorUpdate(ctx context.Context, in *pb.AuthorUpdateRequest) (*pb.AuthorUpdateResponse, error) {
+	if err := h.service.UpdateAuthor(ctx, models.Author{
+		Id:   uint(in.GetId()),
+		Name: in.GetName(),
+	}); err != nil {
+		if errors.Is(err, service.ErrValidation) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 	return &pb.AuthorUpdateResponse{}, nil
 }
 func (h *handler) AuthorDelete(ctx context.Context, in *pb.AuthorDeleteRequest) (*pb.AuthorDeleteResponse, error) {

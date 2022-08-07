@@ -86,3 +86,32 @@ func (s *service) DeleteReview(ctx context.Context, id uint) error {
 	defer cancel()
 	return s.Repository.DeleteReview(ctx, id)
 }
+
+func (s *service) UpdateReview(ctx context.Context, reviewInput models.Review) error {
+	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
+	defer cancel()
+	var review repoModels.Review
+	_, err := s.Repository.GetReviewById(ctx, reviewInput.Id)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "review with this id doesn't exist")
+	}
+	review.Id = reviewInput.Id
+	_, err = s.Repository.GetUserById(ctx, reviewInput.UserId)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "user with this id doesn't exist")
+	}
+	review.UserId = reviewInput.UserId
+	_, err = s.Repository.GetBookById(ctx, reviewInput.BookId)
+	if err != nil {
+		return errors.Wrap(ErrValidation, "book with this id doesn't exist")
+	}
+	review.BookId = reviewInput.BookId
+	if reviewInput.Rating > 10 {
+		return errors.Wrap(ErrValidation, "rating must be less than 10")
+	}
+	review.Rating = reviewInput.Rating
+	review.Time = time.Now()
+	review.ReviewText = reviewInput.ReviewText
+	err = s.Repository.UpdateReview(ctx, review)
+	return err
+}
