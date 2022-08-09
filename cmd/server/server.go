@@ -20,9 +20,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func runGRPC() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+func runGRPC(ctx context.Context) {
 	listener, err := net.Listen("tcp", ":8081")
 	if err != nil {
 		log.Fatal(err.Error())
@@ -34,7 +32,7 @@ func runGRPC() {
 		log.Fatal("can't connect to database", err)
 	}
 	defer pool.Close()
-	if err := pool.Ping(ctx); err != nil {
+	if err = pool.Ping(ctx); err != nil {
 		log.Fatal("ping database error", err)
 	}
 	repo := postgres.NewRepository(pool)
@@ -51,10 +49,7 @@ func runGRPC() {
 	}
 }
 
-func runREST() {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
-
+func runREST(ctx context.Context) {
 	mux := runtime.NewServeMux(
 		runtime.WithIncomingHeaderMatcher(headerMatcherREST),
 	)
@@ -86,9 +81,11 @@ func headerMatcherREST(key string) (string, bool) {
 }
 
 func main() {
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 	if err := godotenv.Load(); err != nil {
 		log.Println("cannot load .env file")
 	}
-	go runREST()
-	runGRPC()
+	go runREST(ctx)
+	runGRPC(ctx)
 }
