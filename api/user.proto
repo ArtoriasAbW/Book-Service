@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api;api";
+import "google/api/annotations.proto";
+
+service User {
+    rpc UserGet(UserGetRequest) returns (UserGetResponse) {
+        option (google.api.http) = {
+            get: "/v1/user/{id}"
+        };
+    }
+    rpc UserCreate(UserCreateRequest) returns (UserCreateResponse) {
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    }
+    rpc UserList(UserListRequest) returns (UserListResponse) {
+        option (google.api.http) = {
+            get: "/v1/users"
+        };
+    }
+    rpc UserUpdate(UserUpdateRequest) returns (UserUpdateResponse) {
+        option (google.api.http) = {
+            put: "/v1/user"
+            body: "*"
+        };
+    }
+    rpc UserDelete(UserDeleteRequest) returns (UserDeleteResponse) {
+        option (google.api.http) = {
+            delete: "/v1/user"
+            body: "*"
+        };
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// UserCreate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message UserGetRequest {
+    uint64 id = 1;
+}
+
+message UserGetResponse {
+    uint64 id = 1;
+    string username = 2;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// UserCreate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message UserCreateRequest {
+    string username = 1;
+}
+
+message UserCreateResponse {
+    uint64 id = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// UserList endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message UserListRequest {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    string order = 3;
+}
+
+message UserListResponse {
+    repeated User users = 1;
+
+    message User {
+        uint64 id = 1;
+        string username = 2;
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// UserUpdate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message UserUpdateRequest {
+    uint64 id = 1;
+    string username = 2;
+}
+message UserUpdateResponse {}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// UserDelete endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message UserDeleteRequest {
+    uint64 id = 1;
+}
+
+message UserDeleteResponse {}

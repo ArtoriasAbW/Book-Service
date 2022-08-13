@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api;api";
+import "google/api/annotations.proto";
+
+service Review {
+    rpc ReviewGet(ReviewGetRequest) returns (ReviewGetResponse) {
+        option (google.api.http) = {
+            get: "/v1/review/{id}"
+        };
+    }
+    rpc ReviewCreate(ReviewCreateRequest) returns (ReviewCreateResponse) {
+        option (google.api.http) = {
+            post: "/v1/review"
+            body: "*"
+        };
+    }
+    rpc ReviewList(ReviewListRequest) returns (ReviewListResponse) {
+        option (google.api.http) = {
+            get: "/v1/reviews"
+        };
+    }
+    rpc ReviewUpdate(ReviewUpdateRequest) returns (ReviewUpdateResponse) {
+        option (google.api.http) = {
+            put: "/v1/review"
+            body: "*"
+        };
+    }
+    rpc ReviewDelete(ReviewDeleteRequest) returns (ReviewDeleteResponse) {
+        option (google.api.http) = {
+            delete: "/v1/review"
+            body: "*"
+        };
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ReviewCreate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ReviewGetRequest {
+    uint64 id = 1;
+}
+
+message ReviewGetResponse {
+    uint64 id = 1;
+    uint32 rating = 2;
+    string reviewText = 3;
+    uint64 time = 4;
+    uint64 bookId = 5;
+    uint64 userId = 6;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ReviewCreate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ReviewCreateRequest {
+    uint32 rating = 2;
+    string reviewText = 3;
+    uint64 bookId = 4;
+    uint64 userId = 5;
+}
+
+message ReviewCreateResponse {
+    uint64 id = 1;
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ReviewList endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ReviewListRequest {
+    uint32 limit = 1;
+    uint32 offset = 2;
+    string order = 3;
+}
+
+message ReviewListResponse {
+    repeated Review reviews = 1;
+
+    message Review {
+        uint64 id = 1;
+        uint32 rating = 2;
+        string reviewText = 3;
+        uint64 time = 4;
+        uint64 bookId = 5;
+        uint64 userId = 6;
+    }
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ReviewUpdate endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ReviewUpdateRequest {
+    uint64 id = 1;
+    uint32 rating = 2;
+    string reviewText = 3;
+    uint64 bookId = 4;
+    uint64 userId = 5;
+}
+message ReviewUpdateResponse {
+}
+
+// ---------------------------------------------------------------------------------------------------------------------
+// ReviewDelete endpoint messages
+// ---------------------------------------------------------------------------------------------------------------------
+
+message ReviewDeleteRequest {
+    uint64 id = 1;
+}
+
+message ReviewDeleteResponse {}
