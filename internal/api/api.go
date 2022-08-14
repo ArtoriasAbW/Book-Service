@@ -1,13 +1,13 @@
 package api
 
 import (
-	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
+	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository"
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 )
 
-func New(service service.Interface) Interface {
+func New(repo repository.Interface) Interface {
 	return &handler{
-		service: service,
+		repo: repo,
 	}
 }
 
@@ -19,7 +19,7 @@ type Interface interface {
 }
 
 type handler struct {
-	service service.Interface
+	repo repository.Interface
 	unimplementedServer
 }
 
