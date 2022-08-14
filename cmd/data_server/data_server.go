@@ -17,12 +17,12 @@ import (
 )
 
 func runGRPC(ctx context.Context) {
-	listener, err := net.Listen("tcp", ":8082")
+	listener, err := net.Listen("tcp", ":8083")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
 
-	psqlConn := fmt.Sprintf("host=localhost port=5432 user=%s password=%s dbname=book_service sslmode=disable", config.GetPostgresUser(), config.GetPostgresPassword())
+	psqlConn := fmt.Sprintf("host=localhost port=6432 user=%s password=%s dbname=book_service sslmode=disable", config.GetPostgresUser(), config.GetPostgresPassword())
 	pool, err := pgxpool.Connect(ctx, psqlConn)
 	if err != nil {
 		log.Fatal("can't connect to database", err)
