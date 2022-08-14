@@ -17,7 +17,7 @@ import (
 )
 
 func runGRPC(ctx context.Context) {
-	listener, err := net.Listen("tcp", ":8083")
+	listener, err := net.Listen("tcp", ":8082")
 	if err != nil {
 		log.Fatal(err.Error())
 	}
@@ -32,6 +32,7 @@ func runGRPC(ctx context.Context) {
 		log.Fatal("ping database error", err)
 	}
 	repo := postgres.NewRepository(pool)
+
 	grpcServer := grpc.NewServer()
 	api := apiPkg.New(repo)
 	pb.RegisterBookServer(grpcServer, api)
