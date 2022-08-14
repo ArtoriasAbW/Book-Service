@@ -51,6 +51,7 @@ func (h *handler) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb
 		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
+
 	result := make([]*pb.AuthorListResponse_Author, 0, len(authors))
 	for _, author := range authors {
 		result = append(result, &pb.AuthorListResponse_Author{
