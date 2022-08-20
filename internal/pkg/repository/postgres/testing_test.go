@@ -9,9 +9,9 @@ import (
 )
 
 type bookRepoFixtures struct {
-	bookRepo repoPkg.Interface
-	db       *sqlx.DB
-	dbMock   sqlmock.Sqlmock
+	repo   repoPkg.Interface
+	db     *sqlx.DB
+	dbMock sqlmock.Sqlmock
 }
 
 func setUp(t *testing.T) bookRepoFixtures {
@@ -22,7 +22,7 @@ func setUp(t *testing.T) bookRepoFixtures {
 	}
 	fixture.db = sqlx.NewDb(db, "sqlmock")
 	fixture.dbMock = mock
-	fixture.bookRepo = NewRepository(fixture.db)
+	fixture.repo = NewRepository(fixture.db)
 	return fixture
 }
 

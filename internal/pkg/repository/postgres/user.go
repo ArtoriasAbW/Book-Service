@@ -53,7 +53,7 @@ func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User,
 	err = rows.StructScan(&user)
 	// err = pgxscan.ScanOne(&user, rows)
 	if err != nil {
-		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: invalid struct scan")
 	}
 	return user, nil
 }
@@ -107,11 +107,11 @@ func (r *repository) UpdateUser(ctx context.Context, newUser repoModels.User) er
 		).PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("Repository:UpdateUser: to sql: %w", err)
+		return fmt.Errorf("Repository.UpdateUser: to sql: %w", err)
 	}
 	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("Repository:UpdateUser: to sql: %w", err)
+		return fmt.Errorf("Repository.UpdateUser: to sql: %w", err)
 	}
 	return nil
 }
