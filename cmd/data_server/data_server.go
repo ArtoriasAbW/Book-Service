@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"os"
 
 	"github.com/jackc/pgx/v4/pgxpool"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
 
+	_ "github.com/lib/pq"
 	apiPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/api"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/config"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/postgres"
@@ -23,6 +26,7 @@ func runGRPC(ctx context.Context) {
 	}
 
 	psqlConn := fmt.Sprintf("host=localhost port=6432 user=%s password=%s dbname=book_service sslmode=disable", config.GetPostgresUser(), config.GetPostgresPassword())
+	db := sqlx.MustOpen("postgres", os.Getenv("POSTGRES_CONNECTION"))
 	pool, err := pgxpool.Connect(ctx, psqlConn)
 	if err != nil {
 		log.Fatal("can't connect to database", err)
@@ -31,7 +35,7 @@ func runGRPC(ctx context.Context) {
 	if err = pool.Ping(ctx); err != nil {
 		log.Fatal("ping database error", err)
 	}
-	repo := postgres.NewRepository(pool)
+	repo := postgres.NewRepository(pool, db)
 
 	grpcServer := grpc.NewServer()
 	api := apiPkg.New(repo)
