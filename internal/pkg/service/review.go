@@ -10,7 +10,7 @@ import (
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 )
 
-func (s *service) GetReview(ctx context.Context, id uint) (models.Review, error) {
+func (s *Implementation) GetReview(ctx context.Context, id uint) (models.Review, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
@@ -30,7 +30,7 @@ func (s *service) GetReview(ctx context.Context, id uint) (models.Review, error)
 	}, err
 }
 
-func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uint64, error) {
+func (s *Implementation) AddReview(ctx context.Context, reviewInput models.Review) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.UserGet(ctx, &pb.UserGetRequest{
@@ -60,7 +60,7 @@ func (s *service) AddReview(ctx context.Context, reviewInput models.Review) (uin
 	return reviewResponce.GetId(), err
 }
 
-func (s *service) ListReviews(ctx context.Context, params models.ListInput) ([]models.Review, error) {
+func (s *Implementation) ListReviews(ctx context.Context, params models.ListInput) ([]models.Review, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	if strings.ToLower(params.Order) == "desc" {
@@ -91,7 +91,7 @@ func (s *service) ListReviews(ctx context.Context, params models.ListInput) ([]m
 	return reviews, nil
 }
 
-func (s *service) DeleteReview(ctx context.Context, id uint) error {
+func (s *Implementation) DeleteReview(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.ReviewDelete(ctx, &pb.ReviewDeleteRequest{
@@ -100,7 +100,7 @@ func (s *service) DeleteReview(ctx context.Context, id uint) error {
 	return err
 }
 
-func (s *service) UpdateReview(ctx context.Context, reviewInput models.Review) error {
+func (s *Implementation) UpdateReview(ctx context.Context, reviewInput models.Review) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.ReviewGet(ctx, &pb.ReviewGetRequest{

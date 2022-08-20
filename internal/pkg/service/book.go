@@ -10,7 +10,7 @@ import (
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 )
 
-func (s *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
+func (s *Implementation) GetBook(ctx context.Context, id uint) (models.Book, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
@@ -26,7 +26,7 @@ func (s *service) GetBook(ctx context.Context, id uint) (models.Book, error) {
 	}, nil
 }
 
-func (s *service) AddBook(ctx context.Context, bookInput models.Book) (uint64, error) {
+func (s *Implementation) AddBook(ctx context.Context, bookInput models.Book) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.AuthorGet(ctx, &pb.AuthorGetRequest{
@@ -48,7 +48,7 @@ func (s *service) AddBook(ctx context.Context, bookInput models.Book) (uint64, e
 	return bookResponce.GetId(), nil
 }
 
-func (s *service) UpdateBook(ctx context.Context, bookInput models.Book) error {
+func (s *Implementation) UpdateBook(ctx context.Context, bookInput models.Book) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.AuthorGet(ctx, &pb.AuthorGetRequest{
@@ -74,7 +74,7 @@ func (s *service) UpdateBook(ctx context.Context, bookInput models.Book) error {
 	return err
 }
 
-func (s *service) DeleteBook(ctx context.Context, id uint) error {
+func (s *Implementation) DeleteBook(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.BookDelete(ctx, &pb.BookDeleteRequest{
@@ -83,7 +83,7 @@ func (s *service) DeleteBook(ctx context.Context, id uint) error {
 	return err
 }
 
-func (s *service) ListBooks(ctx context.Context, params models.ListInput) ([]models.Book, error) {
+func (s *Implementation) ListBooks(ctx context.Context, params models.ListInput) ([]models.Book, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	if strings.ToLower(params.Order) == "desc" {
