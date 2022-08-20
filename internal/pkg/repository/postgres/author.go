@@ -2,10 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
@@ -19,7 +19,7 @@ func (r *repository) AddAuthor(ctx context.Context, author repoModels.Author) (u
 	if err != nil {
 		return 0, fmt.Errorf("Repository.AddAuthor: to sql: %w", err)
 	}
-	row := r.pool.QueryRow(ctx, query, args...)
+	row := r.db.QueryRowContext(ctx, query, args...)
 	var id uint64
 	err = row.Scan(&id)
 	if err != nil {
@@ -42,12 +42,16 @@ func (r *repository) GetAuthorById(ctx context.Context, id uint) (repoModels.Aut
 		return repoModels.Author{}, fmt.Errorf("Repository.GetAuthorById: to sql: %w", err)
 	}
 
-	rows, err := r.pool.Query(ctx, query, args...)
+	rows, err := r.db.QueryxContext(ctx, query, args...)
 	if err != nil {
 		return repoModels.Author{}, fmt.Errorf("Repository.GetAuthorById: to sql: %w", err)
 	}
 	var author repoModels.Author
-	err = pgxscan.ScanOne(&author, rows)
+	ok := rows.Next()
+	if !ok {
+		return repoModels.Author{}, errors.New("no author")
+	}
+	err = rows.StructScan(&author)
 	if err != nil {
 		return repoModels.Author{}, fmt.Errorf("Repository.GetAuthorById: to sql: %w", err)
 	}
@@ -66,7 +70,7 @@ func (r *repository) DeleteAuthor(ctx context.Context, id uint) error {
 	if err != nil {
 		return fmt.Errorf("Repository.DeleteAuthor: to sql: %w", err)
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("Repository.DeleteAuthor: to sql: %w", err)
 	}
@@ -86,7 +90,7 @@ func (r *repository) ListAuthors(ctx context.Context, params repoModels.ListInpu
 		return []repoModels.Author{}, fmt.Errorf("Repository.ListAuthors: select: %w", err)
 	}
 	var authors []repoModels.Author
-	if err := pgxscan.Select(ctx, r.pool, &authors, query, args...); err != nil {
+	if err := r.db.SelectContext(ctx, &authors, query, args...); err != nil {
 		return nil, fmt.Errorf("Repository.ListAuthors: select: %w", err)
 	}
 	return authors, nil
@@ -107,7 +111,7 @@ func (r *repository) UpdateAuthor(ctx context.Context, author repoModels.Author)
 	if err != nil {
 		return fmt.Errorf("Repository.UpdateAuthor: to sql")
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("Repository.UpdateAuthor: to sql")
 	}

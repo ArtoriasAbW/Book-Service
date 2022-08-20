@@ -19,7 +19,6 @@ func (r *repository) AddUser(ctx context.Context, user repoModels.User) (uint64,
 	if err != nil {
 		return 0, fmt.Errorf("Repository.AddUser: to sql: %w", err)
 	}
-	// row := r.pool.QueryRow(ctx, query, args...)
 	row := r.db.QueryRowContext(ctx, query, args...)
 	var id uint64
 	err = row.Scan(&id)
@@ -42,7 +41,6 @@ func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User,
 	if err != nil {
 		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
 	}
-	// rows, err := r.pool.Query(ctx, query, args...)
 	rows, err := r.db.QueryxContext(ctx, query, args...)
 	if err != nil {
 		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
