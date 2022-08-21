@@ -51,7 +51,6 @@ type review interface {
 	DeleteReview(ctx context.Context, id uint) error
 	ListReviews(ctx context.Context, params models.ListInput) ([]models.Review, error)
 	UpdateReview(ctx context.Context, reviewInput models.Review) error
-
 }
 
 type service struct {

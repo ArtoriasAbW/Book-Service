@@ -6,76 +6,90 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
-	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
+	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 )
 
 func (s *service) GetUser(ctx context.Context, id uint) (models.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
-	user, err := s.Repository.GetUserById(ctx, id)
+	userResponse, err := s.Repository.UserGet(ctx, &pb.UserGetRequest{
+		Id: uint64(id),
+	})
+	if err != nil {
+		return models.User{}, err
+	}
 	return models.User{
-		Id:       user.Id,
-		Username: user.Username,
-	}, err
+		Id:       uint(userResponse.Id),
+		Username: userResponse.GetUsername(),
+	}, nil
 }
 
 func (s *service) AddUser(ctx context.Context, userInput models.User) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	var user repoModels.User
 	if userInput.Username == "" {
 		return 0, errors.Wrap(ErrValidation, "field: [username] cannot be empty")
 	}
-	user.Username = userInput.Username
-	id, err := s.Repository.AddUser(ctx, user)
-	return id, err
+	userResponse, err := s.Repository.UserCreate(ctx, &pb.UserCreateRequest{
+		Username: userInput.Username,
+	})
+	if err != nil {
+		return 0, err
+	}
+	return userResponse.GetId(), nil
 }
 
 func (s *service) DeleteUser(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	err := s.Repository.DeleteUser(ctx, id)
+	_, err := s.Repository.UserDelete(ctx, &pb.UserDeleteRequest{
+		Id: uint64(id),
+	})
 	return err
 }
 
 func (s *service) UpdateUser(ctx context.Context, userInput models.User) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	var user repoModels.User
-	_, err := s.Repository.GetUserById(ctx, userInput.Id)
+	_, err := s.Repository.UserGet(ctx, &pb.UserGetRequest{
+		Id: uint64(userInput.Id),
+	})
 	if err != nil {
 		return errors.Wrap(ErrValidation, "user with this id doesn't exist")
 	}
-	user.Id = userInput.Id
 	if userInput.Username == "" {
 		return errors.Wrap(ErrValidation, "field: [username] cannot be empty")
 	}
-	user.Username = userInput.Username
-	err = s.Repository.UpdateUser(ctx, user)
+	_, err = s.Repository.UserUpdate(ctx, &pb.UserUpdateRequest{
+		Id:       uint64(userInput.Id),
+		Username: userInput.Username,
+	})
 	return err
 }
 
 func (s *service) ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
-	var repoParams repoModels.ListInput
-	repoParams.Offset = params.Offset
-	repoParams.Limit = params.Limit
 	if strings.ToLower(params.Order) == "desc" {
-		repoParams.Order = "DESC"
+		params.Order = "DESC"
 	} else {
-		repoParams.Order = "ASC"
+		params.Order = "ASC"
 	}
-	usersRepo, err := s.Repository.ListUsers(ctx, repoParams)
+	usersResponce, err := s.Repository.UserList(ctx, &pb.UserListRequest{
+		Offset: params.Offset,
+		Limit:  params.Limit,
+		Order:  params.Order,
+	})
 	if err != nil {
 		return nil, err
 	}
-	users := make([]models.User, len(usersRepo))
-	for i, user := range usersRepo {
+	usersData := usersResponce.GetUsers()
+	users := make([]models.User, len(usersData))
+	for i, user := range usersData {
 		users[i] = models.User{
-			Id:       user.Id,
+			Id:       uint(user.Id),
 			Username: user.Username,
 		}
 	}

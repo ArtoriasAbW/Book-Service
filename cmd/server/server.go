@@ -2,18 +2,15 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net"
 	"net/http"
 
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/jackc/pgx/v4/pgxpool"
 	"github.com/joho/godotenv"
 
 	apiPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/api"
-	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/config"
-	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/postgres"
+	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/grpc_repo"
 	servicePkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 	"google.golang.org/grpc"
@@ -26,16 +23,12 @@ func runGRPC(ctx context.Context) {
 		log.Fatal(err.Error())
 	}
 
-	psqlConn := fmt.Sprintf("host=localhost port=5432 user=%s password=%s dbname=book_service sslmode=disable", config.GetPostgresUser(), config.GetPostgresPassword())
-	pool, err := pgxpool.Connect(ctx, psqlConn)
+	// add credentials
+	conn, err := grpc.Dial(":8082", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
-		log.Fatal("can't connect to database", err)
+		log.Fatal(err.Error())
 	}
-	defer pool.Close()
-	if err = pool.Ping(ctx); err != nil {
-		log.Fatal("ping database error", err)
-	}
-	repo := postgres.NewRepository(pool)
+	repo := grpc_repo.NewRepository(pb.NewBookClient(conn), pb.NewAuthorClient(conn), pb.NewUserClient(conn), pb.NewReviewClient(conn))
 
 	service := servicePkg.New(servicePkg.Deps{Repository: repo})
 	grpcServer := grpc.NewServer()
