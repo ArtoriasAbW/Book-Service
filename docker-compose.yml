@@ -10,3 +10,19 @@ services:
       POSTGRES_DB: book_service
     ports:
       - 5432:5432
+  pgbouncer:
+    image: docker.io/bitnami/pgbouncer:1
+    ports:
+      - 6432:6432
+    environment:
+      - POSTGRESQL_HOST=db
+      - POSTGRESQL_PORT=5432
+      - PGBOUNCER_AUTH_TYPE=md5
+      - POSTGRESQL_USERNAME=user
+      - POSTGRESQL_PASSWORD=password
+      - POSTGRESQL_DATABASE=book_service
+      - PGBOUNCER_DATABASE=book_service
+      - PGBOUNCER_MAX_CLIENT_CONN=100
+volumes:
+  postgresql_data:
+    driver: local

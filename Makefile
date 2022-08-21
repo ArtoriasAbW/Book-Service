@@ -1,13 +1,8 @@
-.PHONY: run
-run-bot:
-	go run cmd/bot/main.go
-
 run-server:
-	go run cmd/server/server.go
+	go run cmd/data_server/data_server.go
 
 build:
-	go build -o bin/bot cmd/bot/bot.go
-	go build -o bin/server cmd/server/server.go
+	go build -o bin/data_server cmd/data_server/data_server.go
 
 db-up:
 	docker compose up

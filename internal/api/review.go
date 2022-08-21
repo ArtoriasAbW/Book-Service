@@ -2,43 +2,37 @@ package api
 
 import (
 	"context"
-	"errors"
+	"time"
 
-	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
-	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
+	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (h *handler) ReviewGet(ctx context.Context, in *pb.ReviewGetRequest) (*pb.ReviewGetResponse, error) {
-	review, err := h.service.GetReview(ctx, uint(in.GetId()))
+	review, err := h.repo.GetReviewById(ctx, uint(in.GetId()))
 	if err != nil {
-		if errors.Is(err, service.ErrValidation) {
-			return nil, status.Error(codes.InvalidArgument, err.Error())
-		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.ReviewGetResponse{
 		Id:         uint64(review.Id),
 		Rating:     uint32(review.Rating),
 		ReviewText: review.ReviewText,
-		Time:       uint64(review.Time),
+		Time:       uint64(review.Time.Unix()),
 		BookId:     uint64(review.BookId),
 		UserId:     uint64(review.UserId),
 	}, nil
 }
 func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) (*pb.ReviewCreateResponse, error) {
-	id, err := h.service.AddReview(ctx, models.Review{
+	id, err := h.repo.AddReview(ctx, models.Review{
 		Rating:     uint(in.GetRating()),
 		ReviewText: in.GetReviewText(),
+		Time:       time.Now(),
 		BookId:     uint(in.GetBookId()),
 		UserId:     uint(in.GetUserId()),
 	})
 	if err != nil {
-		if errors.Is(err, service.ErrValidation) {
-			return nil, status.Error(codes.InvalidArgument, err.Error())
-		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.ReviewCreateResponse{
@@ -47,15 +41,12 @@ func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) 
 }
 
 func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb.ReviewListResponse, error) {
-	reviews, err := h.service.ListReviews(ctx, models.ListInput{
+	reviews, err := h.repo.ListReviews(ctx, models.ListInput{
 		Limit:  in.GetLimit(),
 		Offset: in.GetOffset(),
 		Order:  in.GetOrder(),
 	})
 	if err != nil {
-		if errors.Is(err, service.ErrValidation) {
-			return nil, status.Error(codes.InvalidArgument, err.Error())
-		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	result := make([]*pb.ReviewListResponse_Review, 0, len(reviews))
@@ -64,7 +55,7 @@ func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb
 			Id:         uint64(review.Id),
 			Rating:     uint32(review.Rating),
 			ReviewText: review.ReviewText,
-			Time:       uint64(review.Time),
+			Time:       uint64(review.Time.Unix()),
 			BookId:     uint64(review.BookId),
 			UserId:     uint64(review.UserId),
 		})
@@ -75,27 +66,22 @@ func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb
 }
 
 func (h *handler) ReviewUpdate(ctx context.Context, in *pb.ReviewUpdateRequest) (*pb.ReviewUpdateResponse, error) {
-	if err := h.service.UpdateReview(ctx, models.Review{
+	if err := h.repo.UpdateReview(ctx, models.Review{
 		Id:         uint(in.GetId()),
 		Rating:     uint(in.GetRating()),
 		ReviewText: in.GetReviewText(),
+		Time:       time.Now(),
 		BookId:     uint(in.GetBookId()),
 		UserId:     uint(in.GetUserId()),
 	}); err != nil {
-		if errors.Is(err, service.ErrValidation) {
-			return nil, status.Error(codes.InvalidArgument, err.Error())
-		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.ReviewUpdateResponse{}, nil
 
 }
 func (h *handler) ReviewDelete(ctx context.Context, in *pb.ReviewDeleteRequest) (*pb.ReviewDeleteResponse, error) {
-	err := h.service.DeleteReview(ctx, uint(in.GetId()))
+	err := h.repo.DeleteReview(ctx, uint(in.GetId()))
 	if err != nil {
-		if errors.Is(err, service.ErrValidation) {
-			return nil, status.Error(codes.InvalidArgument, err.Error())
-		}
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.ReviewDeleteResponse{}, nil
