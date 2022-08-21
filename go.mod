@@ -8,6 +8,7 @@ require (
 	github.com/golang/mock v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.11.1
 	github.com/jmoiron/sqlx v1.3.1
+	github.com/kelseyhightower/envconfig v1.4.0
 	github.com/lib/pq v1.10.2
 	github.com/stretchr/testify v1.8.0
 	google.golang.org/grpc v1.48.0

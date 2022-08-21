@@ -12,6 +12,15 @@ services:
       - 5432:5432
     volumes:
       - postgresql_data:/var/lib/postgresql/data
+  test_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: book_service
+    ports:
+      - 5433:5432
   pgbouncer:
     image: docker.io/bitnami/pgbouncer:1
     ports:
