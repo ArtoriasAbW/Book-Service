@@ -1,0 +1,13 @@
+name: workflow
+on: [push]
+jobs:
+  build:
+    runs-on: golang:1.18
+    steps:
+      - run: make build
+  
+  lint:
+    needs: build
+    runs-on: golang:1.18
+    steps:
+      - run: make lint
