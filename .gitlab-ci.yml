@@ -13,4 +13,16 @@ unit-test:
   needs: [build]
   script:
     - make test
-  
+
+integration-test:
+  stage: build
+  needs: [build]
+  services: 
+    - postgres:latest
+  variables:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: book_service
+  script:
+    - ./migrate.sh
+    - make integration-test
