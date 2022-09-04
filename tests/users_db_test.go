@@ -40,11 +40,11 @@ func TestGetUser(t *testing.T) {
 			Username: "user1",
 		})
 		// act
-		user, err := repo.GetUserById(ctx, uint(id))
+		user, err := repo.GetUserByID(ctx, uint(id))
 
 		// assert
 		require.NoError(t, err)
-		assert.EqualValues(t, id, user.Id)
+		assert.EqualValues(t, id, user.ID)
 		assert.Equal(t, "user1", user.Username)
 
 	})
@@ -55,7 +55,7 @@ func TestGetUser(t *testing.T) {
 		repo := repository.NewRepository(Db.DB)
 		ctx := context.Background()
 		id := 1
-		_, err := repo.GetUserById(ctx, uint(id))
+		_, err := repo.GetUserByID(ctx, uint(id))
 
 		assert.EqualError(t, err, "no user")
 	})
@@ -77,7 +77,7 @@ func TestDeleteUser(t *testing.T) {
 		// assert
 		require.NoError(t, err)
 
-		_, err = repo.GetUserById(ctx, uint(id))
+		_, err = repo.GetUserByID(ctx, uint(id))
 
 		assert.EqualError(t, err, "no user")
 	})
@@ -93,17 +93,17 @@ func TestUpdateUser(t *testing.T) {
 			Username: "user1",
 		})
 		newUser := models.User{
-			Id:       uint(id),
+			ID:       uint(id),
 			Username: "new_username",
 		}
 		err := repo.UpdateUser(ctx, newUser)
 
 		require.NoError(t, err)
 
-		user, err := repo.GetUserById(ctx, uint(id))
+		user, err := repo.GetUserByID(ctx, uint(id))
 
 		require.NoError(t, err)
-		assert.EqualValues(t, id, user.Id)
+		assert.EqualValues(t, id, user.ID)
 		assert.Equal(t, newUser.Username, user.Username)
 	})
 }

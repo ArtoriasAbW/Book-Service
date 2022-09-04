@@ -151,64 +151,64 @@ func (mr *MockInterfaceMockRecorder) DeleteUser(ctx, id interface{}) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*MockInterface)(nil).DeleteUser), ctx, id)
 }
 
-// GetAuthorById mocks base method.
-func (m *MockInterface) GetAuthorById(ctx context.Context, id uint) (models.Author, error) {
+// GetAuthorByID mocks base method.
+func (m *MockInterface) GetAuthorByID(ctx context.Context, id uint) (models.Author, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAuthorById", ctx, id)
+	ret := m.ctrl.Call(m, "GetAuthorByID", ctx, id)
 	ret0, _ := ret[0].(models.Author)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAuthorById indicates an expected call of GetAuthorById.
-func (mr *MockInterfaceMockRecorder) GetAuthorById(ctx, id interface{}) *gomock.Call {
+// GetAuthorByID indicates an expected call of GetAuthorByID.
+func (mr *MockInterfaceMockRecorder) GetAuthorByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorById", reflect.TypeOf((*MockInterface)(nil).GetAuthorById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorByID", reflect.TypeOf((*MockInterface)(nil).GetAuthorByID), ctx, id)
 }
 
-// GetBookById mocks base method.
-func (m *MockInterface) GetBookById(ctx context.Context, id uint) (models.Book, error) {
+// GetBookByID mocks base method.
+func (m *MockInterface) GetBookByID(ctx context.Context, id uint) (models.Book, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBookById", ctx, id)
+	ret := m.ctrl.Call(m, "GetBookByID", ctx, id)
 	ret0, _ := ret[0].(models.Book)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBookById indicates an expected call of GetBookById.
-func (mr *MockInterfaceMockRecorder) GetBookById(ctx, id interface{}) *gomock.Call {
+// GetBookByID indicates an expected call of GetBookByID.
+func (mr *MockInterfaceMockRecorder) GetBookByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookById", reflect.TypeOf((*MockInterface)(nil).GetBookById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookByID", reflect.TypeOf((*MockInterface)(nil).GetBookByID), ctx, id)
 }
 
-// GetReviewById mocks base method.
-func (m *MockInterface) GetReviewById(ctx context.Context, id uint) (models.Review, error) {
+// GetReviewByID mocks base method.
+func (m *MockInterface) GetReviewByID(ctx context.Context, id uint) (models.Review, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetReviewById", ctx, id)
+	ret := m.ctrl.Call(m, "GetReviewByID", ctx, id)
 	ret0, _ := ret[0].(models.Review)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetReviewById indicates an expected call of GetReviewById.
-func (mr *MockInterfaceMockRecorder) GetReviewById(ctx, id interface{}) *gomock.Call {
+// GetReviewByID indicates an expected call of GetReviewByID.
+func (mr *MockInterfaceMockRecorder) GetReviewByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewById", reflect.TypeOf((*MockInterface)(nil).GetReviewById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewByID", reflect.TypeOf((*MockInterface)(nil).GetReviewByID), ctx, id)
 }
 
-// GetUserById mocks base method.
-func (m *MockInterface) GetUserById(ctx context.Context, id uint) (models.User, error) {
+// GetUserByID mocks base method.
+func (m *MockInterface) GetUserByID(ctx context.Context, id uint) (models.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserById", ctx, id)
+	ret := m.ctrl.Call(m, "GetUserByID", ctx, id)
 	ret0, _ := ret[0].(models.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUserById indicates an expected call of GetUserById.
-func (mr *MockInterfaceMockRecorder) GetUserById(ctx, id interface{}) *gomock.Call {
+// GetUserByID indicates an expected call of GetUserByID.
+func (mr *MockInterfaceMockRecorder) GetUserByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserById", reflect.TypeOf((*MockInterface)(nil).GetUserById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*MockInterface)(nil).GetUserByID), ctx, id)
 }
 
 // ListAuthors mocks base method.
@@ -379,19 +379,19 @@ func (mr *MockbookMockRecorder) DeleteBook(ctx, id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteBook", reflect.TypeOf((*Mockbook)(nil).DeleteBook), ctx, id)
 }
 
-// GetBookById mocks base method.
-func (m *Mockbook) GetBookById(ctx context.Context, id uint) (models.Book, error) {
+// GetBookByID mocks base method.
+func (m *Mockbook) GetBookByID(ctx context.Context, id uint) (models.Book, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetBookById", ctx, id)
+	ret := m.ctrl.Call(m, "GetBookByID", ctx, id)
 	ret0, _ := ret[0].(models.Book)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetBookById indicates an expected call of GetBookById.
-func (mr *MockbookMockRecorder) GetBookById(ctx, id interface{}) *gomock.Call {
+// GetBookByID indicates an expected call of GetBookByID.
+func (mr *MockbookMockRecorder) GetBookByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookById", reflect.TypeOf((*Mockbook)(nil).GetBookById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetBookByID", reflect.TypeOf((*Mockbook)(nil).GetBookByID), ctx, id)
 }
 
 // ListBooks mocks base method.
@@ -475,19 +475,19 @@ func (mr *MockuserMockRecorder) DeleteUser(ctx, id interface{}) *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteUser", reflect.TypeOf((*Mockuser)(nil).DeleteUser), ctx, id)
 }
 
-// GetUserById mocks base method.
-func (m *Mockuser) GetUserById(ctx context.Context, id uint) (models.User, error) {
+// GetUserByID mocks base method.
+func (m *Mockuser) GetUserByID(ctx context.Context, id uint) (models.User, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetUserById", ctx, id)
+	ret := m.ctrl.Call(m, "GetUserByID", ctx, id)
 	ret0, _ := ret[0].(models.User)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetUserById indicates an expected call of GetUserById.
-func (mr *MockuserMockRecorder) GetUserById(ctx, id interface{}) *gomock.Call {
+// GetUserByID indicates an expected call of GetUserByID.
+func (mr *MockuserMockRecorder) GetUserByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserById", reflect.TypeOf((*Mockuser)(nil).GetUserById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetUserByID", reflect.TypeOf((*Mockuser)(nil).GetUserByID), ctx, id)
 }
 
 // ListUsers mocks base method.
@@ -571,19 +571,19 @@ func (mr *MockauthorMockRecorder) DeleteAuthor(ctx, id interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteAuthor", reflect.TypeOf((*Mockauthor)(nil).DeleteAuthor), ctx, id)
 }
 
-// GetAuthorById mocks base method.
-func (m *Mockauthor) GetAuthorById(ctx context.Context, id uint) (models.Author, error) {
+// GetAuthorByID mocks base method.
+func (m *Mockauthor) GetAuthorByID(ctx context.Context, id uint) (models.Author, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetAuthorById", ctx, id)
+	ret := m.ctrl.Call(m, "GetAuthorByID", ctx, id)
 	ret0, _ := ret[0].(models.Author)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetAuthorById indicates an expected call of GetAuthorById.
-func (mr *MockauthorMockRecorder) GetAuthorById(ctx, id interface{}) *gomock.Call {
+// GetAuthorByID indicates an expected call of GetAuthorByID.
+func (mr *MockauthorMockRecorder) GetAuthorByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorById", reflect.TypeOf((*Mockauthor)(nil).GetAuthorById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetAuthorByID", reflect.TypeOf((*Mockauthor)(nil).GetAuthorByID), ctx, id)
 }
 
 // ListAuthors mocks base method.
@@ -667,19 +667,19 @@ func (mr *MockreviewMockRecorder) DeleteReview(ctx, id interface{}) *gomock.Call
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DeleteReview", reflect.TypeOf((*Mockreview)(nil).DeleteReview), ctx, id)
 }
 
-// GetReviewById mocks base method.
-func (m *Mockreview) GetReviewById(ctx context.Context, id uint) (models.Review, error) {
+// GetReviewByID mocks base method.
+func (m *Mockreview) GetReviewByID(ctx context.Context, id uint) (models.Review, error) {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "GetReviewById", ctx, id)
+	ret := m.ctrl.Call(m, "GetReviewByID", ctx, id)
 	ret0, _ := ret[0].(models.Review)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
 
-// GetReviewById indicates an expected call of GetReviewById.
-func (mr *MockreviewMockRecorder) GetReviewById(ctx, id interface{}) *gomock.Call {
+// GetReviewByID indicates an expected call of GetReviewByID.
+func (mr *MockreviewMockRecorder) GetReviewByID(ctx, id interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewById", reflect.TypeOf((*Mockreview)(nil).GetReviewById), ctx, id)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetReviewByID", reflect.TypeOf((*Mockreview)(nil).GetReviewByID), ctx, id)
 }
 
 // ListReviews mocks base method.
