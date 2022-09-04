@@ -9,7 +9,7 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: book_service
     ports:
-      - 5432:5432
+      - 5433:5432
     volumes:
       - postgresql_data:/var/lib/postgresql/data
   test_db:
@@ -20,14 +20,14 @@ services:
       POSTGRES_PASSWORD: test_password
       POSTGRES_DB: book_service
     ports:
-      - 5433:5432
+      - 5432:5432
   pgbouncer:
     image: docker.io/bitnami/pgbouncer:1
     ports:
       - 6432:6432
     environment:
       - POSTGRESQL_HOST=db
-      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_PORT=5433
       - PGBOUNCER_AUTH_TYPE=md5
       - POSTGRESQL_USERNAME=user
       - POSTGRESQL_PASSWORD=password
