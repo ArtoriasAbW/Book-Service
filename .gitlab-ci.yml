@@ -23,6 +23,8 @@ integration-test:
       POSTGRES_USER: test_user
       POSTGRES_PASSWORD: test_password
       POSTGRES_DB: book_service
+      POSTGRES_PORT: 5433
   script:
-    - ./migrate.sh
+    - make goose-install
+    - ./migrate-test.sh
     - make integration-test

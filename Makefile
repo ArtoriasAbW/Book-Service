@@ -19,9 +19,14 @@ deps:
 	GOBIN=$(LOCAL_BIN) go install github.com/grpc-ecosystem/grpc-gateway/v2/protoc-gen-openapiv2
 
 MIGRATIONS_DIR=./migrations
+
+.PHONY: goose-install
+goose-install:
+	GOBIN=$(LOCAL_BIN) go install github.com/pressly/goose/v3/cmd/goose@latest
+
 .PHONY: migration
-migration:
-	goose -dir=${MIGRATIONS_DIR} create $(NAME) sql 
+migration: goose-install
+	 $(LOCAL_BIN)/goose -dir=${MIGRATIONS_DIR} create $(NAME) sql 
 
 .PHONY: test
 test:
