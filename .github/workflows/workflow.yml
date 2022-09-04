@@ -1,9 +1,9 @@
 name: workflow
 on: [push]
 jobs:
-  run:
+  build:
     name: Run
-      runs-on: ubuntu-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v3
