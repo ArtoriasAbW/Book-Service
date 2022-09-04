@@ -10,12 +10,12 @@ import (
 )
 
 func (h *handler) AuthorGet(ctx context.Context, in *pb.AuthorGetRequest) (*pb.AuthorGetResponse, error) {
-	author, err := h.repo.GetAuthorById(ctx, uint(in.GetId()))
+	author, err := h.repo.GetAuthorByID(ctx, uint(in.GetId()))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.AuthorGetResponse{
-		Id:   uint64(author.Id),
+		Id:   uint64(author.ID),
 		Name: author.Name,
 	}, nil
 }
@@ -43,7 +43,7 @@ func (h *handler) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb
 	result := make([]*pb.AuthorListResponse_Author, 0, len(authors))
 	for _, author := range authors {
 		result = append(result, &pb.AuthorListResponse_Author{
-			Id:   uint64(author.Id),
+			Id:   uint64(author.ID),
 			Name: author.Name,
 		})
 	}
@@ -54,7 +54,7 @@ func (h *handler) AuthorList(ctx context.Context, in *pb.AuthorListRequest) (*pb
 
 func (h *handler) AuthorUpdate(ctx context.Context, in *pb.AuthorUpdateRequest) (*pb.AuthorUpdateResponse, error) {
 	if err := h.repo.UpdateAuthor(ctx, models.Author{
-		Id:   uint(in.GetId()),
+		ID:   uint(in.GetId()),
 		Name: in.GetName(),
 	}); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())

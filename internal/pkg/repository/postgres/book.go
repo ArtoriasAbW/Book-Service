@@ -2,24 +2,24 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
 func (r *repository) AddBook(ctx context.Context, book repoModels.Book) (uint64, error) {
 	query, args, err := squirrel.Insert("books").
 		Columns("title, author_id").
-		Values(book.Title, book.AuthorId).
+		Values(book.Title, book.AuthorID).
 		Suffix("RETURNING id").
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
 		return 0, fmt.Errorf("Repository.BookAdd: to sql: %w", err)
 	}
-	row := r.pool.QueryRow(ctx, query, args...)
+	row := r.db.QueryRowContext(ctx, query, args...)
 	var id uint64
 	err = row.Scan(&id)
 	if err != nil {
@@ -28,7 +28,7 @@ func (r *repository) AddBook(ctx context.Context, book repoModels.Book) (uint64,
 	return id, nil
 }
 
-func (r *repository) GetBookById(ctx context.Context, id uint) (repoModels.Book, error) {
+func (r *repository) GetBookByID(ctx context.Context, id uint) (repoModels.Book, error) {
 	query, args, err := squirrel.Select("id, title, author_id").
 		From("books").
 		Where(
@@ -41,12 +41,15 @@ func (r *repository) GetBookById(ctx context.Context, id uint) (repoModels.Book,
 	if err != nil {
 		return repoModels.Book{}, fmt.Errorf("Repository.GetBookById: to sql: %w", err)
 	}
-	rows, err := r.pool.Query(ctx, query, args...)
+	rows, err := r.db.QueryxContext(ctx, query, args...)
 	if err != nil {
 		return repoModels.Book{}, fmt.Errorf("Repository.GetBookById: to sql: %w", err)
 	}
 	var book repoModels.Book
-	err = pgxscan.ScanOne(&book, rows)
+	if ok := rows.Next(); !ok {
+		return repoModels.Book{}, errors.New("no books")
+	}
+	err = rows.StructScan(&book)
 	if err != nil {
 		return repoModels.Book{}, fmt.Errorf("Repository.GetBookById: to sql: %w", err)
 	}
@@ -65,7 +68,7 @@ func (r *repository) DeleteBook(ctx context.Context, id uint) error {
 	if err != nil {
 		return fmt.Errorf("Repository.DeleteBook: to sql: %w", err)
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	_, err = r.db.ExecContext(ctx, query, args...)
 
 	if err != nil {
 		return fmt.Errorf("Repository.DeleteBook: to sql: %w", err)
@@ -86,7 +89,7 @@ func (r *repository) ListBooks(ctx context.Context, params repoModels.ListInput)
 		return []repoModels.Book{}, fmt.Errorf("Repository.ListBooks: to sql: %w", err)
 	}
 	var books []repoModels.Book
-	if err := pgxscan.Select(ctx, r.pool, &books, query, args...); err != nil {
+	if err := r.db.SelectContext(ctx, &books, query, args...); err != nil {
 		return nil, fmt.Errorf("Repository.ListBooks: to sql: %w", err)
 	}
 	return books, nil
@@ -97,18 +100,18 @@ func (r *repository) UpdateBook(ctx context.Context, book repoModels.Book) error
 		SetMap(
 			map[string]interface{}{
 				"title":     book.Title,
-				"author_id": book.AuthorId,
+				"author_id": book.AuthorID,
 			}).
 		Where(
 			squirrel.Eq{
-				"id": book.Id,
+				"id": book.ID,
 			}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
 		return fmt.Errorf("Repository.UpdateBook: to sql")
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
 		return fmt.Errorf("Repository.UpdateBook: to sql")
 	}

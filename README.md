@@ -14,7 +14,8 @@
 - **/list** - list all books.
 - **/add "title"|"author"|"status"** - add new book.
 - **/delete "id"** - remove book with this id.
-- **/update "id"|"title"|"author"|"status"** - edit book with this id.
+- **/update "id"|"title"|"author"|"status"** - edit book with this id.inc
+
 
 ## REST
 [Swagger documentation](swagger/api.swagger.json)

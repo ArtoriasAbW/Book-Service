@@ -2,10 +2,10 @@ package postgres
 
 import (
 	"context"
+	"errors"
 	"fmt"
 
 	"github.com/Masterminds/squirrel"
-	"github.com/georgysavva/scany/pgxscan"
 	repoModels "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/models"
 )
 
@@ -19,7 +19,7 @@ func (r *repository) AddUser(ctx context.Context, user repoModels.User) (uint64,
 	if err != nil {
 		return 0, fmt.Errorf("Repository.AddUser: to sql: %w", err)
 	}
-	row := r.pool.QueryRow(ctx, query, args...)
+	row := r.db.QueryRowContext(ctx, query, args...)
 	var id uint64
 	err = row.Scan(&id)
 	if err != nil {
@@ -28,7 +28,7 @@ func (r *repository) AddUser(ctx context.Context, user repoModels.User) (uint64,
 	return id, nil
 }
 
-func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User, error) {
+func (r *repository) GetUserByID(ctx context.Context, id uint) (repoModels.User, error) {
 	query, args, err := squirrel.Select("id", "username").
 		From("users").
 		Where(
@@ -41,14 +41,19 @@ func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User,
 	if err != nil {
 		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
 	}
-	rows, err := r.pool.Query(ctx, query, args...)
+	rows, err := r.db.QueryxContext(ctx, query, args...)
 	if err != nil {
 		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
 	}
 	var user repoModels.User
-	err = pgxscan.ScanOne(&user, rows)
+	ok := rows.Next()
+	if !ok {
+		return repoModels.User{}, errors.New("no user")
+	}
+	err = rows.StructScan(&user)
+	// err = pgxscan.ScanOne(&user, rows)
 	if err != nil {
-		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: %w", err)
+		return repoModels.User{}, fmt.Errorf("Repository.GetUserById: to sql: invalid struct scan")
 	}
 	return user, nil
 }
@@ -65,7 +70,7 @@ func (r *repository) DeleteUser(ctx context.Context, id uint) error {
 	if err != nil {
 		return fmt.Errorf("Repository.DeleteUser: to sql: %w", err)
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	_, err = r.db.ExecContext(ctx, query, args...)
 
 	if err != nil {
 		return fmt.Errorf("Repository.DeleteUser: to sql: %w", err)
@@ -86,7 +91,7 @@ func (r *repository) ListUsers(ctx context.Context, params repoModels.ListInput)
 		return []repoModels.User{}, fmt.Errorf("Repository.ListUsers: to sql: %w", err)
 	}
 	var users []repoModels.User
-	if err := pgxscan.Select(ctx, r.pool, &users, query, args...); err != nil {
+	if err := r.db.SelectContext(ctx, &users, query, args...); err != nil {
 		return nil, fmt.Errorf("Repository.ListUsers: to sql: %w", err)
 	}
 	return users, nil
@@ -97,16 +102,16 @@ func (r *repository) UpdateUser(ctx context.Context, newUser repoModels.User) er
 		Set("username", newUser.Username).
 		Where(
 			squirrel.Eq{
-				"id": newUser.Id,
+				"id": newUser.ID,
 			},
 		).PlaceholderFormat(squirrel.Dollar).
 		ToSql()
 	if err != nil {
-		return fmt.Errorf("Repository:UpdateUser: to sql: %w", err)
+		return fmt.Errorf("Repository.UpdateUser: to sql: %w", err)
 	}
-	_, err = r.pool.Exec(ctx, query, args...)
+	_, err = r.db.ExecContext(ctx, query, args...)
 	if err != nil {
-		return fmt.Errorf("Repository:UpdateUser: to sql: %w", err)
+		return fmt.Errorf("Repository.UpdateUser: to sql: %w", err)
 	}
 	return nil
 }

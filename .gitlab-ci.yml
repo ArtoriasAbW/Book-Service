@@ -1,0 +1,35 @@
+image: golang:1.18
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - make build
+
+lint:
+  stage: build
+  needs: [build]
+  script:
+    - make lint
+
+unit-test:
+  stage: build
+  needs: [build, lint]
+  script:
+    - make test
+
+integration-test:
+  stage: build
+  needs: [build, lint]
+  services: 
+    - postgres:latest
+  variables:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: book_service
+  script:
+    - make goose-install
+    - ./migrate-test.sh
+    - make integration-test

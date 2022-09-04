@@ -9,6 +9,17 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: book_service
     ports:
+      - 5433:5432
+    volumes:
+      - postgresql_data:/var/lib/postgresql/data
+  test_db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: book_service
+    ports:
       - 5432:5432
   pgbouncer:
     image: docker.io/bitnami/pgbouncer:1
@@ -16,13 +27,14 @@ services:
       - 6432:6432
     environment:
       - POSTGRESQL_HOST=db
-      - POSTGRESQL_PORT=5432
+      - POSTGRESQL_PORT=5433
       - PGBOUNCER_AUTH_TYPE=md5
       - POSTGRESQL_USERNAME=user
       - POSTGRESQL_PASSWORD=password
       - POSTGRESQL_DATABASE=book_service
       - PGBOUNCER_DATABASE=book_service
       - PGBOUNCER_MAX_CLIENT_CONN=100
+      - PGBOUNCER_IGNORE_STARTUP_PARAMETERS=extra_float_digits
 volumes:
   postgresql_data:
     driver: local
