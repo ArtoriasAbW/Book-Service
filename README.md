@@ -17,7 +17,7 @@
 - **/update "id"|"title"|"author"|"status"** - edit book with this id.
 
 ## REST
-[Swagger documentation](swagger/api.swagger.json)
+[Swagger documentation](swagger)
 
 ## GRPC
-[Proto file](api/api.proto)
+[Proto files](api)
