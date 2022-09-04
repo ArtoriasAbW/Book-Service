@@ -10,8 +10,8 @@ import (
 
 var ErrValidation = errors.New("invalid data")
 
-func New(d Deps) *service {
-	return &service{Deps: d}
+func New(d Deps) *Implementation {
+	return &Implementation{Deps: d}
 }
 
 type Interface interface {
@@ -53,7 +53,7 @@ type review interface {
 	UpdateReview(ctx context.Context, reviewInput models.Review) error
 }
 
-type service struct {
+type Implementation struct {
 	Deps
 }
 

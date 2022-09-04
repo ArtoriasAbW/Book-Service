@@ -3,7 +3,6 @@ package api
 import (
 	"context"
 	"errors"
-	"fmt"
 
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/service/models"
@@ -26,7 +25,6 @@ func (h *handler) UserGet(ctx context.Context, in *pb.UserGetRequest) (*pb.UserG
 	}, nil
 }
 func (h *handler) UserCreate(ctx context.Context, in *pb.UserCreateRequest) (*pb.UserCreateResponse, error) {
-	fmt.Println("create")
 	id, err := h.service.AddUser(ctx, models.User{
 		Username: in.GetUsername(),
 	})

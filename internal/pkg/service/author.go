@@ -10,7 +10,7 @@ import (
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 )
 
-func (s *service) GetAuthor(ctx context.Context, id uint) (models.Author, error) {
+func (s *Implementation) GetAuthor(ctx context.Context, id uint) (models.Author, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
@@ -26,7 +26,7 @@ func (s *service) GetAuthor(ctx context.Context, id uint) (models.Author, error)
 	}, nil
 }
 
-func (s *service) AddAuthor(ctx context.Context, authorInput models.Author) (uint64, error) {
+func (s *Implementation) AddAuthor(ctx context.Context, authorInput models.Author) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	if authorInput.Name == "" {
@@ -41,7 +41,7 @@ func (s *service) AddAuthor(ctx context.Context, authorInput models.Author) (uin
 	return authorCreateResponce.GetId(), nil
 }
 
-func (s *service) DeleteAuthor(ctx context.Context, id uint) error {
+func (s *Implementation) DeleteAuthor(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.AuthorDelete(ctx, &pb.AuthorDeleteRequest{
@@ -50,7 +50,7 @@ func (s *service) DeleteAuthor(ctx context.Context, id uint) error {
 	return err
 }
 
-func (s *service) UpdateAuthor(ctx context.Context, authorInput models.Author) error {
+func (s *Implementation) UpdateAuthor(ctx context.Context, authorInput models.Author) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.AuthorGet(ctx, &pb.AuthorGetRequest{
@@ -69,7 +69,7 @@ func (s *service) UpdateAuthor(ctx context.Context, authorInput models.Author) e
 	return err
 }
 
-func (s *service) ListAuthors(ctx context.Context, params models.ListInput) ([]models.Author, error) {
+func (s *Implementation) ListAuthors(ctx context.Context, params models.ListInput) ([]models.Author, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	if strings.ToLower(params.Order) == "desc" {

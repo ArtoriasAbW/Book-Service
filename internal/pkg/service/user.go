@@ -10,7 +10,7 @@ import (
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 )
 
-func (s *service) GetUser(ctx context.Context, id uint) (models.User, error) {
+func (s *Implementation) GetUser(ctx context.Context, id uint) (models.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*500))
 	defer cancel()
 	var err error
@@ -26,7 +26,7 @@ func (s *service) GetUser(ctx context.Context, id uint) (models.User, error) {
 	}, nil
 }
 
-func (s *service) AddUser(ctx context.Context, userInput models.User) (uint64, error) {
+func (s *Implementation) AddUser(ctx context.Context, userInput models.User) (uint64, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	if userInput.Username == "" {
@@ -41,7 +41,7 @@ func (s *service) AddUser(ctx context.Context, userInput models.User) (uint64, e
 	return userResponse.GetId(), nil
 }
 
-func (s *service) DeleteUser(ctx context.Context, id uint) error {
+func (s *Implementation) DeleteUser(ctx context.Context, id uint) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	_, err := s.Repository.UserDelete(ctx, &pb.UserDeleteRequest{
@@ -50,17 +50,17 @@ func (s *service) DeleteUser(ctx context.Context, id uint) error {
 	return err
 }
 
-func (s *service) UpdateUser(ctx context.Context, userInput models.User) error {
+func (s *Implementation) UpdateUser(ctx context.Context, userInput models.User) error {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
+	if userInput.Username == "" {
+		return errors.Wrap(ErrValidation, "field: [username] cannot be empty")
+	}
 	_, err := s.Repository.UserGet(ctx, &pb.UserGetRequest{
 		Id: uint64(userInput.Id),
 	})
 	if err != nil {
 		return errors.Wrap(ErrValidation, "user with this id doesn't exist")
-	}
-	if userInput.Username == "" {
-		return errors.Wrap(ErrValidation, "field: [username] cannot be empty")
 	}
 	_, err = s.Repository.UserUpdate(ctx, &pb.UserUpdateRequest{
 		Id:       uint64(userInput.Id),
@@ -69,7 +69,7 @@ func (s *service) UpdateUser(ctx context.Context, userInput models.User) error {
 	return err
 }
 
-func (s *service) ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error) {
+func (s *Implementation) ListUsers(ctx context.Context, params models.ListInput) ([]models.User, error) {
 	ctx, cancel := context.WithTimeout(ctx, time.Duration(time.Millisecond*1000))
 	defer cancel()
 	if strings.ToLower(params.Order) == "desc" {
