@@ -1,0 +1,16 @@
+image: golang:1.18
+
+stages:
+  - build
+
+build:
+  stage: build
+  script:
+    - make build
+
+unit-test:
+  stage: build
+  needs: [build]
+  script:
+    - make test
+  
