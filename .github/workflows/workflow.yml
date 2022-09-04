@@ -12,9 +12,11 @@ jobs:
           POSTGRES_USER: test_user
           POSTGRES_PASSWORD: test_password
           POSTGRES_DB: book_service
-          
+
     name: Run
     steps:
+      - name: Checkout repository code
+        uses: actions/checkout@v3
       - name: Build app
         run: make build
       - name: Linter
