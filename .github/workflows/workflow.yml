@@ -14,3 +14,5 @@ jobs:
         with:
           go-version: '1.18'
       - run: make build
+      - name: Linter
+        run: make lint
