@@ -62,12 +62,12 @@ func TestGetUser(t *testing.T) {
 		f.dbMock.ExpectQuery(queryStore).WithArgs(id).WillReturnRows(rows)
 
 		// act
-		user, err := f.repo.GetUserById(context.Background(), id)
+		user, err := f.repo.GetUserByID(context.Background(), id)
 
 		// assert
 		require.NoError(t, err)
 		assert.Equal(t, models.User{
-			Id:       id,
+			ID:       id,
 			Username: username,
 		}, user)
 	})
@@ -80,7 +80,7 @@ func TestGetUser(t *testing.T) {
 		f.dbMock.ExpectQuery(queryStore).WithArgs(id).WillReturnError(errors.New("some error"))
 
 		// act
-		_, err := f.repo.GetUserById(context.Background(), id)
+		_, err := f.repo.GetUserByID(context.Background(), id)
 
 		// assert
 		assert.Equal(t, err, fmt.Errorf("Repository.GetUserById: to sql: %w", errors.New("some error")))
@@ -95,7 +95,7 @@ func TestGetUser(t *testing.T) {
 		f.dbMock.ExpectQuery(queryStore).WithArgs(id).WillReturnRows(rows)
 
 		// act
-		_, err := f.repo.GetUserById(context.Background(), id)
+		_, err := f.repo.GetUserByID(context.Background(), id)
 
 		// assert
 		assert.Equal(t, err, fmt.Errorf("Repository.GetUserById: to sql: invalid struct scan"))
@@ -109,12 +109,13 @@ func TestUpdateUser(t *testing.T) {
 		defer f.tearDown()
 		queryStore := regexp.QuoteMeta(`UPDATE users SET username = $1 WHERE id = $2`)
 		id := uint(1)
+		//nolint:goconst
 		username := "user2"
 		f.dbMock.ExpectExec(queryStore).WithArgs(username, id).WillReturnResult(sqlmock.NewResult(1, 1))
 
 		// act
 		err := f.repo.UpdateUser(context.Background(), models.User{
-			Id:       id,
+			ID:       id,
 			Username: username,
 		})
 		assert.NoError(t, err)
@@ -130,7 +131,7 @@ func TestUpdateUser(t *testing.T) {
 
 		// act
 		err := f.repo.UpdateUser(context.Background(), models.User{
-			Id:       id,
+			ID:       id,
 			Username: username,
 		})
 		assert.Equal(t, err, fmt.Errorf("Repository.UpdateUser: to sql: %w", errors.New("some error")))
@@ -180,10 +181,10 @@ func TestListUsers(t *testing.T) {
 			Order:  "ACK",
 		}
 		queryStore := regexp.QuoteMeta(`SELECT id, username FROM users ORDER BY username ACK LIMIT 2 OFFSET 1`)
-		userRows := []models.User{{Id: 1, Username: "user1"}, {Id: 2, Username: "user2"}}
+		userRows := []models.User{{ID: 1, Username: "user1"}, {ID: 2, Username: "user2"}}
 		rows := sqlmock.NewRows([]string{"id", "username"}).
-			AddRow(userRows[0].Id, userRows[0].Username).
-			AddRow(userRows[1].Id, userRows[1].Username)
+			AddRow(userRows[0].ID, userRows[0].Username).
+			AddRow(userRows[1].ID, userRows[1].Username)
 		f.dbMock.ExpectQuery(queryStore).WillReturnRows(rows)
 
 		// act

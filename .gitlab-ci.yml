@@ -8,15 +8,21 @@ build:
   script:
     - make build
 
-unit-test:
+lint:
   stage: build
   needs: [build]
+  script:
+    - make lint
+
+unit-test:
+  stage: build
+  needs: [build, lint]
   script:
     - make test
 
 integration-test:
   stage: build
-  needs: [build]
+  needs: [build, lint]
   services: 
     - postgres:latest
   variables:

@@ -13,7 +13,7 @@ import (
 func (r *repository) AddReview(ctx context.Context, review repoModels.Review) (uint64, error) {
 	query, args, err := squirrel.Insert("reviews").
 		Columns("rating", "review_text", "time", "user_id", "book_id").
-		Values(review.Rating, review.ReviewText, review.Time.Format(time.RFC3339), review.UserId, review.BookId).
+		Values(review.Rating, review.ReviewText, review.Time.Format(time.RFC3339), review.UserID, review.BookID).
 		PlaceholderFormat(squirrel.Dollar).
 		Suffix("RETURNING id").
 		ToSql()
@@ -29,7 +29,7 @@ func (r *repository) AddReview(ctx context.Context, review repoModels.Review) (u
 	return id, nil
 }
 
-func (r *repository) GetReviewById(ctx context.Context, id uint) (repoModels.Review, error) {
+func (r *repository) GetReviewByID(ctx context.Context, id uint) (repoModels.Review, error) {
 	query, args, err := squirrel.Select("id", "rating", "review_text", "time", "user_id", "book_id").
 		From("reviews").
 		Where(
@@ -100,12 +100,12 @@ func (r *repository) UpdateReview(ctx context.Context, review repoModels.Review)
 				"rating":      review.Rating,
 				"review_text": review.ReviewText,
 				"time":        review.Time,
-				"book_id":     review.BookId,
-				"user_id":     review.UserId,
+				"book_id":     review.BookID,
+				"user_id":     review.UserID,
 			}).
 		Where(
 			squirrel.Eq{
-				"id": review.Id,
+				"id": review.ID,
 			}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()

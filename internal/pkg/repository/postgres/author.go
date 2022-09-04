@@ -28,7 +28,7 @@ func (r *repository) AddAuthor(ctx context.Context, author repoModels.Author) (u
 	return id, nil
 }
 
-func (r *repository) GetAuthorById(ctx context.Context, id uint) (repoModels.Author, error) {
+func (r *repository) GetAuthorByID(ctx context.Context, id uint) (repoModels.Author, error) {
 	query, args, err := squirrel.Select("id, author").
 		From("authors").
 		Where(
@@ -104,7 +104,7 @@ func (r *repository) UpdateAuthor(ctx context.Context, author repoModels.Author)
 			}).
 		Where(
 			squirrel.Eq{
-				"id": author.Id,
+				"id": author.ID,
 			}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()

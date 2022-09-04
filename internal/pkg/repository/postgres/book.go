@@ -12,7 +12,7 @@ import (
 func (r *repository) AddBook(ctx context.Context, book repoModels.Book) (uint64, error) {
 	query, args, err := squirrel.Insert("books").
 		Columns("title, author_id").
-		Values(book.Title, book.AuthorId).
+		Values(book.Title, book.AuthorID).
 		Suffix("RETURNING id").
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()
@@ -28,7 +28,7 @@ func (r *repository) AddBook(ctx context.Context, book repoModels.Book) (uint64,
 	return id, nil
 }
 
-func (r *repository) GetBookById(ctx context.Context, id uint) (repoModels.Book, error) {
+func (r *repository) GetBookByID(ctx context.Context, id uint) (repoModels.Book, error) {
 	query, args, err := squirrel.Select("id, title, author_id").
 		From("books").
 		Where(
@@ -100,11 +100,11 @@ func (r *repository) UpdateBook(ctx context.Context, book repoModels.Book) error
 		SetMap(
 			map[string]interface{}{
 				"title":     book.Title,
-				"author_id": book.AuthorId,
+				"author_id": book.AuthorID,
 			}).
 		Where(
 			squirrel.Eq{
-				"id": book.Id,
+				"id": book.ID,
 			}).
 		PlaceholderFormat(squirrel.Dollar).
 		ToSql()

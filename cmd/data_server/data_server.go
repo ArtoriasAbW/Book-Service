@@ -23,6 +23,7 @@ func runGRPC(ctx context.Context) {
 	}
 
 	db := sqlx.MustOpen("postgres", os.Getenv("POSTGRES_CONNECTION"))
+	//nolint:errcheck
 	defer db.Close()
 	if err != nil {
 		log.Fatal("can't connect to database", err)

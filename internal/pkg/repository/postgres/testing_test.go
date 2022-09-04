@@ -27,5 +27,6 @@ func setUp(t *testing.T) bookRepoFixtures {
 }
 
 func (f *bookRepoFixtures) tearDown() {
+	//nolint:all
 	f.db.Close()
 }

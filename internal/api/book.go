@@ -10,20 +10,20 @@ import (
 )
 
 func (h *handler) BookGet(ctx context.Context, in *pb.BookGetRequest) (*pb.BookGetResponse, error) {
-	book, err := h.repo.GetBookById(ctx, uint(in.Id))
+	book, err := h.repo.GetBookByID(ctx, uint(in.Id))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.BookGetResponse{
 		Title:    book.Title,
-		AuthorId: uint64(book.AuthorId),
+		AuthorId: uint64(book.AuthorID),
 	}, nil
 }
 
 func (h *handler) BookCreate(ctx context.Context, in *pb.BookCreateRequest) (*pb.BookCreateResponse, error) {
 	id, err := h.repo.AddBook(ctx, models.Book{
 		Title:    in.GetTitle(),
-		AuthorId: uint(in.GetAuthorId()),
+		AuthorID: uint(in.GetAuthorId()),
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -44,9 +44,9 @@ func (h *handler) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.Boo
 	result := make([]*pb.BookListResponse_Book, 0, len(books))
 	for _, book := range books {
 		result = append(result, &pb.BookListResponse_Book{
-			Id:       uint64(book.Id),
+			Id:       uint64(book.ID),
 			Title:    book.Title,
-			AuthorId: uint64(book.AuthorId),
+			AuthorId: uint64(book.AuthorID),
 		})
 	}
 	return &pb.BookListResponse{
@@ -56,9 +56,9 @@ func (h *handler) BookList(ctx context.Context, in *pb.BookListRequest) (*pb.Boo
 
 func (h *handler) BookUpdate(ctx context.Context, in *pb.BookUpdateRequest) (*pb.BookUpdateResponse, error) {
 	if err := h.repo.UpdateBook(ctx, models.Book{
-		Id:       uint(in.GetId()),
+		ID:       uint(in.GetId()),
 		Title:    in.GetTitle(),
-		AuthorId: uint(in.GetAuthorId()),
+		AuthorID: uint(in.GetAuthorId()),
 	}); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

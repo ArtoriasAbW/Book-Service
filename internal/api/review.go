@@ -11,17 +11,17 @@ import (
 )
 
 func (h *handler) ReviewGet(ctx context.Context, in *pb.ReviewGetRequest) (*pb.ReviewGetResponse, error) {
-	review, err := h.repo.GetReviewById(ctx, uint(in.GetId()))
+	review, err := h.repo.GetReviewByID(ctx, uint(in.GetId()))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.ReviewGetResponse{
-		Id:         uint64(review.Id),
+		Id:         uint64(review.ID),
 		Rating:     uint32(review.Rating),
 		ReviewText: review.ReviewText,
 		Time:       uint64(review.Time.Unix()),
-		BookId:     uint64(review.BookId),
-		UserId:     uint64(review.UserId),
+		BookId:     uint64(review.BookID),
+		UserId:     uint64(review.UserID),
 	}, nil
 }
 func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) (*pb.ReviewCreateResponse, error) {
@@ -29,8 +29,8 @@ func (h *handler) ReviewCreate(ctx context.Context, in *pb.ReviewCreateRequest) 
 		Rating:     uint(in.GetRating()),
 		ReviewText: in.GetReviewText(),
 		Time:       time.Now(),
-		BookId:     uint(in.GetBookId()),
-		UserId:     uint(in.GetUserId()),
+		BookID:     uint(in.GetBookId()),
+		UserID:     uint(in.GetUserId()),
 	})
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
@@ -52,12 +52,12 @@ func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb
 	result := make([]*pb.ReviewListResponse_Review, 0, len(reviews))
 	for _, review := range reviews {
 		result = append(result, &pb.ReviewListResponse_Review{
-			Id:         uint64(review.Id),
+			Id:         uint64(review.ID),
 			Rating:     uint32(review.Rating),
 			ReviewText: review.ReviewText,
 			Time:       uint64(review.Time.Unix()),
-			BookId:     uint64(review.BookId),
-			UserId:     uint64(review.UserId),
+			BookId:     uint64(review.BookID),
+			UserId:     uint64(review.UserID),
 		})
 	}
 	return &pb.ReviewListResponse{
@@ -67,12 +67,12 @@ func (h *handler) ReviewList(ctx context.Context, in *pb.ReviewListRequest) (*pb
 
 func (h *handler) ReviewUpdate(ctx context.Context, in *pb.ReviewUpdateRequest) (*pb.ReviewUpdateResponse, error) {
 	if err := h.repo.UpdateReview(ctx, models.Review{
-		Id:         uint(in.GetId()),
+		ID:         uint(in.GetId()),
 		Rating:     uint(in.GetRating()),
 		ReviewText: in.GetReviewText(),
 		Time:       time.Now(),
-		BookId:     uint(in.GetBookId()),
-		UserId:     uint(in.GetUserId()),
+		BookID:     uint(in.GetBookId()),
+		UserID:     uint(in.GetUserId()),
 	}); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}

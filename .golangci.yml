@@ -37,12 +37,12 @@ linters:
     - govet
     - ineffassign
     - revive
-
 issues:
   exclude-use-default: false
   exclude:
     - G102
-    - should have a package comment, unless it's in another file for this package
+    - should have a package comment
+    - package comment should be of the form "Package repository ..."
     - should have comment
     - comment on exported
     - should be `URLID`

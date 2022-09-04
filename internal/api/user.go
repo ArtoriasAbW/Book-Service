@@ -10,12 +10,12 @@ import (
 )
 
 func (h *handler) UserGet(ctx context.Context, in *pb.UserGetRequest) (*pb.UserGetResponse, error) {
-	user, err := h.repo.GetUserById(ctx, uint(in.GetId()))
+	user, err := h.repo.GetUserByID(ctx, uint(in.GetId()))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 	return &pb.UserGetResponse{
-		Id:       uint64(user.Id),
+		Id:       uint64(user.ID),
 		Username: user.Username,
 	}, nil
 }
@@ -40,7 +40,7 @@ func (h *handler) UserList(ctx context.Context, in *pb.UserListRequest) (*pb.Use
 	result := make([]*pb.UserListResponse_User, 0, len(users))
 	for _, user := range users {
 		result = append(result, &pb.UserListResponse_User{
-			Id:       uint64(user.Id),
+			Id:       uint64(user.ID),
 			Username: user.Username,
 		})
 	}
@@ -50,7 +50,7 @@ func (h *handler) UserList(ctx context.Context, in *pb.UserListRequest) (*pb.Use
 }
 func (h *handler) UserUpdate(ctx context.Context, in *pb.UserUpdateRequest) (*pb.UserUpdateResponse, error) {
 	if err := h.repo.UpdateUser(ctx, models.User{
-		Id:       uint(in.GetId()),
+		ID:       uint(in.GetId()),
 		Username: in.GetUsername(),
 	}); err != nil {
 		return nil, status.Error(codes.Internal, err.Error())

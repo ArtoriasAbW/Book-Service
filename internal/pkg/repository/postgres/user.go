@@ -28,7 +28,7 @@ func (r *repository) AddUser(ctx context.Context, user repoModels.User) (uint64,
 	return id, nil
 }
 
-func (r *repository) GetUserById(ctx context.Context, id uint) (repoModels.User, error) {
+func (r *repository) GetUserByID(ctx context.Context, id uint) (repoModels.User, error) {
 	query, args, err := squirrel.Select("id", "username").
 		From("users").
 		Where(
@@ -102,7 +102,7 @@ func (r *repository) UpdateUser(ctx context.Context, newUser repoModels.User) er
 		Set("username", newUser.Username).
 		Where(
 			squirrel.Eq{
-				"id": newUser.Id,
+				"id": newUser.ID,
 			},
 		).PlaceholderFormat(squirrel.Dollar).
 		ToSql()
