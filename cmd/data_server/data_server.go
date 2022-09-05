@@ -54,5 +54,6 @@ func main() {
 	if err := godotenv.Load(); err != nil {
 		loggerPkg.Logger.Info("cannot load .env file")
 	}
+	defer loggerPkg.Logger.Sync()
 	runGRPC(ctx)
 }
