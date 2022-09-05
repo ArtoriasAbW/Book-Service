@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"log"
 	"net"
 	"os"
 
@@ -11,6 +10,7 @@ import (
 
 	_ "github.com/lib/pq"
 	apiPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/api"
+	loggerPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/logger"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/pkg/repository/postgres"
 	pb "gitlab.ozon.dev/ArtoriasAbW/homework-01/pkg/api"
 	"google.golang.org/grpc"
@@ -19,17 +19,17 @@ import (
 func runGRPC(ctx context.Context) {
 	listener, err := net.Listen("tcp", ":8082")
 	if err != nil {
-		log.Fatal(err.Error())
+		loggerPkg.Logger.Fatal(err.Error())
 	}
 
 	db := sqlx.MustOpen("postgres", os.Getenv("POSTGRES_CONNECTION"))
 	//nolint:errcheck
 	defer db.Close()
 	if err != nil {
-		log.Fatal("can't connect to database", err)
+		loggerPkg.Logger.Fatal("can't connect to database: " + err.Error())
 	}
 	if err = db.PingContext(ctx); err != nil {
-		log.Fatal("ping database error", err)
+		loggerPkg.Logger.Fatal("ping database error: " + err.Error())
 	}
 	repo := postgres.NewRepository(db)
 
@@ -40,15 +40,19 @@ func runGRPC(ctx context.Context) {
 	pb.RegisterUserServer(grpcServer, api)
 	pb.RegisterReviewServer(grpcServer, api)
 	if err = grpcServer.Serve(listener); err != nil {
-		log.Fatal(err.Error())
+		loggerPkg.Logger.Fatal(err.Error())
 	}
 }
 
 func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
+	err := loggerPkg.InitLogger()
+	if err != nil {
+		loggerPkg.Logger.Fatal("Failed to init logger")
+	}
 	if err := godotenv.Load(); err != nil {
-		log.Println("cannot load .env file")
+		loggerPkg.Logger.Info("cannot load .env file")
 	}
 	runGRPC(ctx)
 }

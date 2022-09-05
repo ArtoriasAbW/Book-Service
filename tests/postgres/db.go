@@ -6,13 +6,13 @@ package postgres
 import (
 	"context"
 	"fmt"
-	"log"
 	"strings"
 	"sync"
 	"testing"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	loggerPkg "gitlab.ozon.dev/ArtoriasAbW/homework-01/internal/logger"
 	"gitlab.ozon.dev/ArtoriasAbW/homework-01/tests/config"
 )
 
@@ -24,10 +24,7 @@ type TDB struct {
 func NewFromEnv() *TDB {
 	cfg, err := config.FromEnv()
 	if err != nil {
-		log.Fatal(err.Error())
-	}
-	if err != nil {
-		panic(err.Error())
+		loggerPkg.Logger.Fatal(err.Error())
 	}
 	psqlInfo := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		cfg.DbHost, cfg.DbPort, cfg.DbUser, cfg.DbPassword, cfg.DbName)
@@ -40,6 +37,7 @@ func NewFromEnv() *TDB {
 }
 
 func (d *TDB) Setup(t *testing.T) {
+	loggerPkg.InitLogger()
 	t.Helper()
 	ctx := context.Background()
 	d.Lock()
@@ -57,13 +55,13 @@ func (db *TDB) Truncate(ctx context.Context) {
 		"and table_name != 'goose_db_version'")
 
 	if err != nil {
-		log.Fatal(err.Error())
+		loggerPkg.Logger.Fatal(err.Error())
 	}
 	if len(tables) == 0 {
-		log.Fatal("run migrations please")
+		loggerPkg.Logger.Fatal("run migrations please")
 	}
 	q := fmt.Sprintf("Truncate table %s", strings.Join(tables, ","))
 	if _, err := db.DB.Exec(q); err != nil {
-		log.Fatal(err.Error())
+		loggerPkg.Logger.Fatal(err.Error())
 	}
 }
