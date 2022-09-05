@@ -31,12 +31,12 @@ migration: goose-install
 .PHONY: test
 test:
 	$(info Running tests...)
-	go test ./...
+	go clean -testcache && go test ./...
 
 .PHONY: integration-test
 integration-test:
 	$(info Running integration tests...)
-	go test -tags=integration ./... 
+	go clean -testcache && go test -tags=integration ./... 
 
 .PHONY: cover
 cover:
